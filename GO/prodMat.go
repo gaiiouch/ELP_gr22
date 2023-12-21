@@ -4,7 +4,7 @@ import "fmt"
 
 const taille = 3
 
-func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
+func prodMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
 			C[i][j] = 0
