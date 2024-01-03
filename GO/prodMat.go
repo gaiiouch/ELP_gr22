@@ -2,9 +2,8 @@ package main
 
 import "fmt"
 
-const taille = 3
-
 func prodMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
+
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
 			C[i][j] = 0
@@ -17,6 +16,9 @@ func prodMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taill
 }
 
 func main() {
+
+	const taille int = 3
+
 	var matA [taille][taille]int
 	var matB [taille][taille]int
 	var matC [taille][taille]int

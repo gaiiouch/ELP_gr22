@@ -5,16 +5,12 @@ import (
 	"os"
 )
 
-const taille int = 3
-
-func ecritureMat(mat [taille][taille]int, filename string) int {
+func ecritureMat(taille int, mat [][]int, filename string) int {
 	file, err := os.Create(filename)
 
 	if err != nil {
 		return 1
 	}
-
-	defer file.Close()
 
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
@@ -29,11 +25,15 @@ func ecritureMat(mat [taille][taille]int, filename string) int {
 		}
 	}
 
+	defer file.Close()
+
 	return 0
 }
 
 func main() {
-	var matA [taille][taille]int
+	var matA [][]int
+
+	const taille int = 3
 
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
@@ -41,7 +41,7 @@ func main() {
 		}
 	}
 
-	err := ecritureMat(matA, "matriceA.txt")
+	err := ecritureMat(taille, matA, "matriceA.txt")
 	if err == 1 {
 		fmt.Println("Erreur lors de l'écriture")
 	}
