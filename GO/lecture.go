@@ -10,7 +10,7 @@ import (
 
 const taille int = 3
 
-func lectureMat(mat [][]int, filename string) int {
+func lectureMat(mat [taille][taille]int, filename string) int {
 
 	file, err := os.Open(filename)
 
@@ -25,6 +25,7 @@ func lectureMat(mat [][]int, filename string) int {
 
 	for scanner.Scan() {
 		values := strings.Fields(scanner.Text())
+		fmt.Println(values)
 		var line []int
 
 		for _, value := range values {
@@ -36,7 +37,6 @@ func lectureMat(mat [][]int, filename string) int {
 		}
 
 		fmt.Println(line)
-		mat = append(mat, line)
 
 	}
 	fmt.Println(mat)
@@ -46,11 +46,10 @@ func lectureMat(mat [][]int, filename string) int {
 
 func main() {
 
-	var matA [][]int
+	var matA [taille][taille]int
 
 	err := lectureMat(matA, "matriceA.txt")
 	if err == 1 {
 		fmt.Println("Erreur lors de la lecture")
 	}
-	fmt.Println(matA)
 }

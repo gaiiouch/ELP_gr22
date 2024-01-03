@@ -5,7 +5,9 @@ import (
 	"os"
 )
 
-func ecritureMat(taille int, mat [][]int, filename string) int {
+const taille int = 3
+
+func ecritureMat(mat [taille][taille]int, filename string) int {
 	file, err := os.Create(filename)
 
 	if err != nil {
@@ -31,9 +33,7 @@ func ecritureMat(taille int, mat [][]int, filename string) int {
 }
 
 func main() {
-	var matA [][]int
-
-	const taille int = 3
+	var matA [taille][taille]int
 
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
@@ -41,7 +41,7 @@ func main() {
 		}
 	}
 
-	err := ecritureMat(taille, matA, "matriceA.txt")
+	err := ecritureMat(matA, "matriceA.txt")
 	if err == 1 {
 		fmt.Println("Erreur lors de l'écriture")
 	}
