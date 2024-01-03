@@ -5,51 +5,48 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 )
 
 const taille int = 3
 
-func lectureMat(mat [taille][taille]int, filename string) int {
+func lectureMat(filename string) ([taille][taille]int, int) {
+
+	var mat [taille][taille]int
 
 	file, err := os.Open(filename)
 
 	if err != nil {
-		return 1
+		return mat, 1
 	}
 
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
+	scanner.Split(bufio.ScanWords)
 
-	for scanner.Scan() {
-		values := strings.Fields(scanner.Text())
-		fmt.Println(values)
-		var line []int
+	scanner.Scan()
 
-		for _, value := range values {
-			num, err := strconv.Atoi(value)
+	for i := 0; i < taille; i++ {
+
+		for j := 0; j < taille; j++ {
+
+			num, err := strconv.Atoi(scanner.Text())
+
 			if err != nil {
-				return 1
+				return mat, 1
 			}
-			line = append(line, num)
+
+			mat[i][j] = num
 		}
-
-		fmt.Println(line)
-
 	}
-	fmt.Println(mat)
-
-	return 0
+	return mat, 0
 }
 
 func main() {
 
-	var matA [taille][taille]int
-
-	err := lectureMat(matA, "matriceA.txt")
+	matA, err := lectureMat("matriceA.txt")
 	if err == 1 {
 		fmt.Println("Erreur lors de la lecture")
 	}
+	fmt.Println(matA)
 }
