@@ -7,6 +7,7 @@ import (
 
 const taille int = 3
 
+// écrit une matrice dans un fichier à partir d'une variable matrice déjà créée
 func ecritureMat(mat [taille][taille]int, filename string) int {
 	file, err := os.Create(filename)
 

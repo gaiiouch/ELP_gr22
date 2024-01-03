@@ -9,6 +9,7 @@ import (
 
 const taille int = 3
 
+// lit une matrice dans un fichier pour la transformer en variable pour le code
 func lectureMat(filename string) ([taille][taille]int, int) {
 
 	var mat [taille][taille]int

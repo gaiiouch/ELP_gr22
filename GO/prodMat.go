@@ -4,6 +4,7 @@ import "fmt"
 
 const taille int = 3
 
+// calcule le produit de deux matrices carrées de même taille
 func prodMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
 
 	for i := 0; i < taille; i++ {
