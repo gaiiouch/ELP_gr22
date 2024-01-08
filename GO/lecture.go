@@ -2,38 +2,59 @@ package main
 
 import (
 	"bufio"
-	"log"
+	"math"
 	"os"
 	"strconv"
 )
 
-// lit une matrice dans un fichier pour la transformer en variable pour le code
-func LectureMat(taille int, mat [taille][taille]int, filename string) [taille][taille]int {
+func LireMatriceDuFichier(nomFichier string) ([][]int, error) {
 
-	file, err := os.Open(filename)
-
+	fichier, err := os.Open(nomFichier)
 	if err != nil {
-		log.Fatalln("Erreur lors de l'ouverture du fichier")
+		return nil, err
 	}
+	defer fichier.Close()
 
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
+	// calcul de la taille de la matrice pour pouvoir la créer ensuite
+	scanner := bufio.NewScanner(fichier)
 	scanner.Split(bufio.ScanWords)
 
-	for i := 0; i < taille; i++ {
+	var nb_valeurs float64 = 0
 
-		for j := 0; j < taille; j++ {
+	for scanner.Scan() {
+		nb_valeurs += 1
+	}
+
+	var n int = int(math.Sqrt(nb_valeurs))
+
+	matrice := make([][]int, n)
+
+	// réinitialisation du scanner pour pouvoir remplir la matrice en déplacant le curseur au début du fichier
+	_, err = fichier.Seek(0, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	scanner = bufio.NewScanner(fichier)
+	scanner.Split(bufio.ScanWords)
+
+	// remplissage de la matrice
+	for i := 0; i < n; i++ {
+
+		matrice[i] = make([]int, n)
+
+		for j := 0; j < n; j++ {
 
 			scanner.Scan()
-			num, err := strconv.Atoi(scanner.Text())
+			val, err := strconv.Atoi(scanner.Text())
 
 			if err != nil {
-				log.Fatalln("Erreur lors de la conversion en entier")
+				return nil, err
 			}
 
-			mat[i][j] = num
+			matrice[i][j] = val
 		}
 	}
-	return mat
+
+	return matrice, nil
 }

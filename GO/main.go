@@ -1,31 +1,44 @@
-// pour exécuter le programme : go run .
-
 package main
 
 import (
 	"fmt"
+	"log"
 )
 
-const taille int = 3
-
 func main() {
+	// lecture de la première matrice dans un fichier
+	nomFichier_1 := "matriceA.txt"
 
-	var matA [taille][taille]int
-	var matB [taille][taille]int
-	var matC [taille][taille]int
-
-	matA = LectureMat(taille, matA, "matriceA.txt")
-	fmt.Println(matA)
-
-	for i := 0; i < taille; i++ {
-		for j := 0; j < taille; j++ {
-			matB[i][j] = 1
-		}
+	matriceA, err := LireMatriceDuFichier(nomFichier_1)
+	if err != nil {
+		log.Fatalf("Erreur lors de la lecture du fichier : %v", err)
 	}
 
-	matC = ProdMat(taille, matA, matB)
-	fmt.Println(matC)
+	fmt.Println("Matrice lue depuis le fichier :", matriceA)
 
-	EcritureMat(taille, matC, "matriceRes.txt")
+	// création de la deuxième matrice
+	matriceB := [][]int{
+		{1, 1, 1},
+		{1, 1, 1},
+		{1, 1, 1},
+	}
 
+	// produit des deux matrices avec vérification que les matrices soient carrées et de même taille
+	if len(matriceA) != len(matriceB) || len(matriceA) == 0 {
+		fmt.Println("Les matrices ne sont pas de taille carrée ou sont vides.")
+		return
+	}
+
+	produit := ProduitMatrices(matriceA, matriceB)
+	fmt.Println("Produit des matrices :", produit)
+
+	// ecriture du résultat du produit dans un fichier
+	nomFichier_2 := "matriceRes.txt"
+
+	err = EcrireMatriceDansFichier(len(produit), produit, nomFichier_2)
+	if err != nil {
+		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+	}
+
+	fmt.Printf("Matrice écrite dans le fichier %s\n", nomFichier_2)
 }

@@ -2,30 +2,30 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
-// écrit une matrice dans un fichier à partir d'une variable matrice déjà créée
-func EcritureMat(taille int, mat [taille][taille]int, filename string) {
-	file, err := os.Create(filename)
+func EcrireMatriceDansFichier(n int, matrice [][]int, nomFichier string) error {
 
+	fichier, err := os.Create(nomFichier)
 	if err != nil {
-		log.Fatalln("Erreur lors de la création du fichier")
+		return err
 	}
+	defer fichier.Close()
 
-	defer file.Close()
-
-	for i := 0; i < taille; i++ {
-		for j := 0; j < taille; j++ {
-			_, err = fmt.Fprintf(file, "%d ", mat[i][j])
+	// ecriture dans le fichier
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			_, err = fmt.Fprintf(fichier, "%d ", matrice[i][j])
 			if err != nil {
-				log.Fatalln("Erreur lors de l'écriture dans le fichier")
+				return err
 			}
 		}
-		_, err = fmt.Fprintf(file, "\n")
+		_, err = fmt.Fprintf(fichier, "\n")
 		if err != nil {
-			log.Fatalln("Erreur lors de l'écriture dans le fichier")
+			return err
 		}
 	}
+
+	return nil
 }
