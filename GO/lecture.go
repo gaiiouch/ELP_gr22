@@ -2,19 +2,18 @@ package main
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strconv"
 )
 
-/*const taille int = 3*/
-
 // lit une matrice dans un fichier pour la transformer en variable pour le code
-func LectureMat(taille int, mat [taille][taille]int, filename string) ([taille][taille]int, int) {
+func LectureMat(taille int, mat [taille][taille]int, filename string) [taille][taille]int {
 
 	file, err := os.Open(filename)
 
 	if err != nil {
-		return mat, 1
+		log.Fatalln("Erreur lors de l'ouverture du fichier")
 	}
 
 	defer file.Close()
@@ -31,22 +30,11 @@ func LectureMat(taille int, mat [taille][taille]int, filename string) ([taille][
 			num, err := strconv.Atoi(scanner.Text())
 
 			if err != nil {
-				return mat, 1
+				log.Fatalln("Erreur lors de la conversion en entier")
 			}
 
 			mat[i][j] = num
 		}
 	}
-	return mat, 0
+	return mat
 }
-
-/*
-func main() {
-
-	matA, err := LectureMat("matriceA.txt")
-	if err == 1 {
-		fmt.Println("Erreur lors de la lecture")
-	}
-	fmt.Println(matA)
-}
-*/
