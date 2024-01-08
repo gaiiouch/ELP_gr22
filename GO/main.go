@@ -20,7 +20,6 @@ func main() {
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
 			matB[i][j] = 1
-			matC[i][j] = 1
 		}
 	}
 
