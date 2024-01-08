@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -36,6 +35,5 @@ func LectureMat(taille int, mat [taille][taille]int, filename string) [taille][t
 			mat[i][j] = num
 		}
 	}
-	fmt.Println(mat)
 	return mat
 }
