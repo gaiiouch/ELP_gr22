@@ -19,7 +19,7 @@ func main() {
 		}
 	}
 
-	matC = ProdMat(taille, matA, matB)
+	matC = main.ProdMat(taille, matA, matB)
 	fmt.Println(matC)
 
 }
