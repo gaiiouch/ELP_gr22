@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -21,12 +22,11 @@ func LectureMat(taille int, mat [taille][taille]int, filename string) [taille][t
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanWords)
 
-	scanner.Scan()
-
 	for i := 0; i < taille; i++ {
 
 		for j := 0; j < taille; j++ {
 
+			scanner.Scan()
 			num, err := strconv.Atoi(scanner.Text())
 
 			if err != nil {
@@ -36,5 +36,6 @@ func LectureMat(taille int, mat [taille][taille]int, filename string) [taille][t
 			mat[i][j] = num
 		}
 	}
+	fmt.Println(mat)
 	return mat
 }
