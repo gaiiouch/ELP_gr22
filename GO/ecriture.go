@@ -5,10 +5,10 @@ import (
 	"os"
 )
 
-const taille int = 3
+/*const taille int = 3*/
 
 // écrit une matrice dans un fichier à partir d'une variable matrice déjà créée
-func ecritureMat(mat [taille][taille]int, filename string) int {
+func EcritureMat(taille int, mat [taille][taille]int, filename string) int {
 	file, err := os.Create(filename)
 
 	if err != nil {
@@ -33,6 +33,7 @@ func ecritureMat(mat [taille][taille]int, filename string) int {
 	return 0
 }
 
+/*
 func main() {
 	var matA [taille][taille]int
 
@@ -42,8 +43,9 @@ func main() {
 		}
 	}
 
-	err := ecritureMat(matA, "matriceA.txt")
+	err := EcritureMat(matA, "matriceA.txt")
 	if err == 1 {
 		fmt.Println("Erreur lors de l'écriture")
 	}
 }
+*/

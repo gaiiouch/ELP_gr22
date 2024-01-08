@@ -1,11 +1,9 @@
 package main
 
-import "fmt"
-
-const taille int = 3
+/*const taille int = 3*/
 
 // calcule le produit de deux matrices carrées de même taille
-func prodMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
+func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
 
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
@@ -18,6 +16,7 @@ func prodMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taill
 	return
 }
 
+/*
 func main() {
 
 	var matA [taille][taille]int
@@ -32,6 +31,6 @@ func main() {
 		}
 	}
 
-	matC = prodMat(taille, matA, matB)
+	matC = ProdMat(taille, matA, matB)
 	fmt.Println(matC)
-}
+}*/
