@@ -3,13 +3,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 	"sync"
 )
 
-const taille int = 10
+const taille int = 9
 
 func main() {
 
@@ -19,19 +18,14 @@ func main() {
 	var matB [taille][taille]int
 
 	matA = LectureMat(taille, matA, "matriceA.txt")
-	fmt.Println(matA)
-
-	for i := 0; i < taille; i++ {
-		for j := 0; j < taille; j++ {
-			matB[i][j] = 1
-		}
-	}
+	matB = LectureMat(taille, matB, "matriceB.txt")
 
 	a := 0
 	b := 1
 	nb_goroutines := taille
-	channel := make(chan string, 2)
+	channel := make(chan string)
 	wg.Add(nb_goroutines)
+
 	for i := 0; i < taille; i++ {
 		var ligne [taille]int
 		go ProdMat(taille, matA, matB, ligne, a, b, channel, &wg)
