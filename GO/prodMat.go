@@ -1,9 +1,16 @@
 package main
 
-// calcule le produit de deux matrices carrées de même taille
-func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taille][taille]int) {
+import (
+	"fmt"
+	"sync"
+)
 
-	for i := 0; i < taille; i++ {
+// calcule le produit de deux matrices carrées de même taille
+func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int, C [taille][taille]int, a int, b int, channel chan string, wg *sync.WaitGroup) {
+
+	defer wg.Done()
+
+	for i := a; i < b; i++ {
 		for j := 0; j < taille; j++ {
 			C[i][j] = 0
 			for k := 0; k < taille; k++ {
@@ -11,5 +18,7 @@ func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int) (C [taill
 			}
 		}
 	}
-	return
+	chaine := fmt.Sprintf("%d %d", a, C)
+	channel <- chaine
+
 }
