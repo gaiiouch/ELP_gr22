@@ -32,11 +32,15 @@ func main() {
 	channel := make(chan string, 2)
 	wg.Add(nb_goroutines)
 	for i := 0; i < taille; i++ {
-		go ProdMat(taille, matA, matB, matC, a, b, channel, &wg)
+		var ligne [taille]int
+		go ProdMat(taille, matA, matB, ligne, a, b, channel, &wg)
 		a++
 		b++
-		v := <-channel
-		fmt.Println(v)
+	}
+
+	for v := 0; v < taille; v++ {
+		u := <-channel
+		fmt.Println(u)
 	}
 
 	wg.Wait()
