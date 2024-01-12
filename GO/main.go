@@ -28,22 +28,19 @@ func main() {
 
 	a := 0
 	b := 1
-
-	channel := make(chan string)
-
+	nb_goroutines := 3
+	channel := make(chan string, 2)
+	wg.Add(nb_goroutines)
 	for i := 0; i < taille; i++ {
-		wg.Add(1)
 		go ProdMat(taille, matA, matB, matC, a, b, channel, &wg)
 		a++
 		b++
+		v := <-channel
+		fmt.Println(v)
 	}
 
-	//close(channel)
 	wg.Wait()
-
-	for valeur := range channel {
-		fmt.Println(valeur)
-	}
+	close(channel)
 
 	//matC = ProdMat(taille, matA, matB, a, b)
 	//fmt.Println(matC)

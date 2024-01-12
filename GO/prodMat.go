@@ -9,7 +9,6 @@ import (
 func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int, C [taille][taille]int, a int, b int, channel chan string, wg *sync.WaitGroup) {
 
 	defer wg.Done()
-
 	for i := a; i < b; i++ {
 		for j := 0; j < taille; j++ {
 			C[i][j] = 0
@@ -20,5 +19,4 @@ func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int, C [taille
 	}
 	chaine := fmt.Sprintf("%d %d", a, C)
 	channel <- chaine
-
 }
