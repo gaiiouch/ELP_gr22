@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-const taille int = 3
+const taille int = 10
 
 func main() {
 
@@ -29,7 +29,7 @@ func main() {
 
 	a := 0
 	b := 1
-	nb_goroutines := 3
+	nb_goroutines := taille
 	channel := make(chan string, 2)
 	wg.Add(nb_goroutines)
 	for i := 0; i < taille; i++ {
@@ -58,10 +58,10 @@ func main() {
 			log.Fatalln("Erreur lors de la conversion en entier")
 		}
 
-		fmt.Println(u, num_ligne)
+		//fmt.Println(u, num_ligne)
 
 		ligne := string(u[k+2 : len(u)-1])
-		fmt.Println(ligne)
+		//fmt.Println(ligne)
 
 		matC[num_ligne] = ligne
 
@@ -70,7 +70,6 @@ func main() {
 	wg.Wait()
 	close(channel)
 
-	fmt.Println(matC)
 	//matC = ProdMat(taille, matA, matB, a, b)
 	//fmt.Println(matC)
 
