@@ -4,6 +4,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"strconv"
 	"sync"
 )
 
@@ -15,7 +17,6 @@ func main() {
 
 	var matA [taille][taille]int
 	var matB [taille][taille]int
-	var matC [taille][taille]int
 
 	matA = LectureMat(taille, matA, "matriceA.txt")
 	fmt.Println(matA)
@@ -38,14 +39,38 @@ func main() {
 		b++
 	}
 
+	var matC [taille]string
+
 	for v := 0; v < taille; v++ {
 		u := <-channel
-		fmt.Println(u)
+
+		k := 0
+		for {
+			if string(u[k]) == " " {
+				break
+			}
+			k++
+		}
+
+		num_ligne, err := strconv.Atoi(string(u[:k]))
+
+		if err != nil {
+			log.Fatalln("Erreur lors de la conversion en entier")
+		}
+
+		fmt.Println(u, num_ligne)
+
+		ligne := string(u[k+2 : len(u)-1])
+		fmt.Println(ligne)
+
+		matC[num_ligne] = ligne
+
 	}
 
 	wg.Wait()
 	close(channel)
 
+	fmt.Println(matC)
 	//matC = ProdMat(taille, matA, matB, a, b)
 	//fmt.Println(matC)
 
