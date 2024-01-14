@@ -37,7 +37,7 @@ func main() {
 	}
 
 	nom_fichier2 := "matriceB.txt"
-	err = EcritureMatInt(taille, matA, nom_fichier2)
+	err = EcritureMatInt(taille, matB, nom_fichier2)
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
