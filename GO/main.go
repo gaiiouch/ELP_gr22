@@ -24,18 +24,18 @@ func main() {
 	file_name := "matriceA.txt"
 	matA, err := LectureMat(taille, matA, file_name)
 	if err != nil {
-		log.Fatalln("Erreur lors de la lecture du fichier %s : %v", file_name, err)
+		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
 	}
 
 	file_name = "matriceB.txt"
 	matB, err = LectureMat(taille, matB, "matriceB.txt")
 	if err != nil {
-		log.Fatalln("Erreur lors de la lecture du fichier %s : %v", file_name, err)
+		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
 	}
 
 	// préparation pour les goroutines avec canal pour stocker chaque ligne de la matrice calculée
 	a := 0
-	b := 1
+	b := 1 // ACTUELLEMENT INUTILE SI ON FAIT LIGNE PAR LIGNE
 	nb_goroutines := taille
 	channel := make(chan string)
 	wg.Add(nb_goroutines) // nb de goroutines à attendre
@@ -49,24 +49,25 @@ func main() {
 	}
 
 	// pour chacune récupération de lignes dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
-	for v := 0; v < taille; v++ {
-		u := <-channel // format de u : "numéroDeLaLigne [contenuDeLaLigne]"
+	for j := 0; j < taille; j++ {
+		data := <-channel // format de data : "numéroDeLaLigne [contenuDeLaLigne]"
 
 		k := 0
+		// recherche du premier espace dans les strings du canal
 		for {
-			if string(u[k]) == " " { // recherche du premier espace dans des strings dans le canal
+			if string(data[k]) == " " {
 				break
 			}
 			k++
 		}
 
-		num_ligne, err := strconv.Atoi(string(u[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
+		num_ligne, err := strconv.Atoi(string(data[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 		if err != nil {
 			log.Fatalln("Erreur lors de la conversion en entier")
 		}
 
 		// insertion du contenu de la ligne dans la matrice résultat
-		ligne := string(u[k+2 : len(u)-1])
+		ligne := string(data[k+2 : len(data)-1])
 		matC[num_ligne] = ligne
 
 	}
@@ -77,7 +78,7 @@ func main() {
 	// écriture du résultat dans une matrice pour ensuite l'envoyer au client
 	err = EcritureMat(taille, matC, "matriceRes.txt")
 	if err != nil {
-		log.Fatalln("Erreur lors de l'écriture dans le fichier : %v", err)
+		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
 
 }
