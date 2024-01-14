@@ -9,13 +9,15 @@ import (
 func handle(conn net.Conn) {
 	defer conn.Close()
 
-	for {
-		data, err := bufio.NewReader(conn).ReadString('\n') //read the data only string
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+	scanner := bufio.NewScanner(conn)
+
+	for scanner.Scan() {
+		data := scanner.Text()
 		fmt.Println(data)
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error reading:", err)
 	}
 }
 

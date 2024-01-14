@@ -12,10 +12,11 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	defer conn.Close()
+	//defer conn.Close()
 
 	for i := 0; i < 5; i++ {
 		io.WriteString(conn, fmt.Sprintf("Coucou %d\n", i))
 	}
 
+	conn.Close()
 }
