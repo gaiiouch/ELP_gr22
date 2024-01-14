@@ -76,7 +76,7 @@ func main() {
 	close(channel)
 
 	// écriture du résultat dans une matrice pour ensuite l'envoyer au client
-	err = EcritureMat(taille, matC, "matriceRes.txt")
+	err = EcritureMatString(taille, matC, "matriceRes.txt")
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}

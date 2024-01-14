@@ -1,3 +1,5 @@
+// go run tcpserver.go
+
 package main
 
 import (
@@ -8,6 +10,9 @@ import (
 
 func handle(conn net.Conn) {
 	defer conn.Close()
+
+	remoteAddr := conn.RemoteAddr()
+	fmt.Printf("Connection established with %s\n", remoteAddr)
 
 	scanner := bufio.NewScanner(conn)
 
