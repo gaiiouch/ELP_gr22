@@ -3,8 +3,8 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
-	"io"
 	"log"
 	"math/rand"
 	"net"
@@ -13,12 +13,6 @@ import (
 const taille int = 9
 
 func main() {
-	conn, err := net.Dial("tcp", "127.0.0.1:8000")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer conn.Close()
 
 	var matA [taille][taille]int
 	var matB [taille][taille]int
@@ -30,18 +24,40 @@ func main() {
 		}
 	}
 
-	nom_fichier1 := "matriceA.txt"
-	err = EcritureMatInt(taille, matA, nom_fichier1)
+	//fmt.Println(matA)
+	//fmt.Println(matB)
+
+	conn, err := net.Dial("tcp", "127.0.0.1:8000")
 	if err != nil {
-		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+		fmt.Println(err)
+		return
+	}
+	defer conn.Close()
+
+	encoder := gob.NewEncoder(conn)
+	err = encoder.Encode(matA)
+	if err != nil {
+		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
 	}
 
-	nom_fichier2 := "matriceB.txt"
-	err = EcritureMatInt(taille, matB, nom_fichier2)
+	err = encoder.Encode(matB)
 	if err != nil {
-		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
 	}
 
-	io.WriteString(conn, fmt.Sprintf("Matrices écrites dans les fichiers %s et %s", nom_fichier1, nom_fichier2))
+	/*
+		nom_fichier1 := "matriceA.txt"
+		err = EcritureMatInt(taille, matA, nom_fichier1)
+		if err != nil {
+			log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+		}
+
+		nom_fichier2 := "matriceB.txt"
+		err = EcritureMatInt(taille, matB, nom_fichier2)
+		if err != nil {
+			log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+		}
+
+		io.WriteString(conn, fmt.Sprintf("Matrices écrites dans les fichiers %s et %s", nom_fichier1, nom_fichier2))*/
 
 }

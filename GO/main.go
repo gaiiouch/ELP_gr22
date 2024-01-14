@@ -1,4 +1,4 @@
-// pour exécuter le programme : go run .
+// pour exécuter le programme : go run main.go lecture.go prodMat.go
 
 package main
 
