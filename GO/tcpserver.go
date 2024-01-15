@@ -42,28 +42,26 @@ func handle(conn net.Conn) {
 	//fmt.Println(matB)
 
 	// création des fichiers contenant les matrices
-	nomFichier_1 := "matriceA.txt"
-	nomFichier_2 := "matriceB.txt"
-	nomFichier_3 := "matriceRes.txt"
+	noms_fichiers := []string{"matriceA.txt", "matriceB.txt", "matriceRes.txt"}
 
-	err = EcrireMatriceIntDansFichier(taille, matA, nomFichier_1)
+	err = EcrireMatriceIntDansFichier(taille, matA, noms_fichiers[0])
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
 
-	err = EcrireMatriceIntDansFichier(taille, matB, nomFichier_2)
+	err = EcrireMatriceIntDansFichier(taille, matB, noms_fichiers[1])
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
 
 	// calcul du produit des matrices à l'aide des fichiers
-	err = Main(taille, nomFichier_1, nomFichier_2, nomFichier_3)
+	err = Main(taille, noms_fichiers)
 	if err != nil {
 		fmt.Println("Erreur de calcul de la matrice résultat :", err)
 	}
 
 	// lecture de la matrice résultat dans le fichier correspondant
-	matRes, err = LireMatriceDuFichier(nomFichier_3)
+	matRes, err = LireMatriceDuFichier(noms_fichiers[1])
 	if err != nil {
 		fmt.Println("Erreur de lecture de la matrice :", err)
 	}

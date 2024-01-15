@@ -5,19 +5,19 @@ import (
 	"sync"
 )
 
-func Main(taille int, nomFichier_1 string, nomFichier_2 string, nomFichier_3 string) error {
+func Main(taille int, noms_fichiers []string) error {
 
 	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
 
 	// lecture des matrices dans des fichiers
-	matriceA, err := LireMatriceDuFichier(nomFichier_1)
+	matriceA, err := LireMatriceDuFichier(noms_fichiers[0])
 	if err != nil {
 		//log.Fatalf("Erreur lors de la lecture du fichier %s : %v", nomFichier_1, err)
 		return err
 	}
 
-	matriceB, err := LireMatriceDuFichier(nomFichier_2)
+	matriceB, err := LireMatriceDuFichier(noms_fichiers[1])
 	if err != nil {
 		//log.Fatalf("Erreur lors de la lecture du fichier %s : %v", nomFichier_2, err)
 		return err
@@ -76,7 +76,7 @@ func Main(taille int, nomFichier_1 string, nomFichier_2 string, nomFichier_3 str
 	close(channel)
 
 	// ecriture du résultat du produit dans un fichier
-	err = EcrireMatriceStringDansFichier(len(produit), produit, nomFichier_3)
+	err = EcrireMatriceStringDansFichier(len(produit), produit, noms_fichiers[2])
 	if err != nil {
 		//log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 		return err
