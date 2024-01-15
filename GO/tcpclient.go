@@ -1,4 +1,4 @@
-// go run tcpclient.go ecriture.go
+// go run tcpclient.go
 
 package main
 
@@ -16,6 +16,7 @@ func main() {
 
 	var matA [taille][taille]int
 	var matB [taille][taille]int
+	var matRes [taille][taille]int
 
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
@@ -27,6 +28,7 @@ func main() {
 	//fmt.Println(matA)
 	//fmt.Println(matB)
 
+	// connection avec le serveur
 	conn, err := net.Dial("tcp", "127.0.0.1:8000")
 	if err != nil {
 		fmt.Println(err)
@@ -34,6 +36,7 @@ func main() {
 	}
 	defer conn.Close()
 
+	// encodage des données à envoyer au serveur (matrices -> bits)
 	encoder := gob.NewEncoder(conn)
 	err = encoder.Encode(matA)
 	if err != nil {
@@ -45,19 +48,14 @@ func main() {
 		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
 	}
 
-	/*
-		nom_fichier1 := "matriceA.txt"
-		err = EcritureMatInt(taille, matA, nom_fichier1)
-		if err != nil {
-			log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
-		}
+	// décodage des données envoyées par le serveur
+	decoder := gob.NewDecoder(conn)
 
-		nom_fichier2 := "matriceB.txt"
-		err = EcritureMatInt(taille, matB, nom_fichier2)
-		if err != nil {
-			log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
-		}
+	err = decoder.Decode(&matRes) // matrice résultat
+	if err != nil {
+		fmt.Println("Erreur de réception :", err)
+	}
 
-		io.WriteString(conn, fmt.Sprintf("Matrices écrites dans les fichiers %s et %s", nom_fichier1, nom_fichier2))*/
+	//fmt.Println(matRes)
 
 }

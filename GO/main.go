@@ -8,27 +8,19 @@ import (
 	"sync"
 )
 
-const taille int = 9
-
-func main() {
+// variables à ajouter : taille, matA, matB, matC, ligne, noms des fichiers
+func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille]string, ligne [taille]int, file_name []string) {
 
 	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
 
-	// création des matrices pour le calcul et pour le résultat
-	var matA [taille][taille]int
-	var matB [taille][taille]int
-	var matC [taille]string
-
-	// lecture des matrices dans les fichiers
-	file_name := "matriceA.txt"
-	matA, err := LectureMat(taille, matA, file_name)
+	// lecture des fichiers contenant les matrices
+	matA, err := LectureMat(taille, matA, file_name[0])
 	if err != nil {
 		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
 	}
 
-	file_name = "matriceB.txt"
-	matB, err = LectureMat(taille, matB, "matriceB.txt")
+	matB, err = LectureMat(taille, matB, file_name[1])
 	if err != nil {
 		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
 	}
@@ -42,7 +34,6 @@ func main() {
 
 	// pour chaque ligne de la première matrice, on calcule via les goroutines la ligne correspondante pour la matrice résultat
 	for i := 0; i < taille; i++ {
-		var ligne [taille]int
 		go ProdMat(taille, matA, matB, ligne, a, b, channel, &wg)
 		a++
 		b++
@@ -76,7 +67,7 @@ func main() {
 	close(channel)
 
 	// écriture du résultat dans une matrice pour ensuite l'envoyer au client
-	err = EcritureMatString(taille, matC, "matriceRes.txt")
+	err = EcritureMatString(taille, matC, file_name[2])
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
