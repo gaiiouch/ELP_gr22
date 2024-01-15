@@ -1,35 +1,33 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"strconv"
 	"sync"
 )
 
-func main() {
+func Main(taille int, nomFichier_1 string, nomFichier_2 string, nomFichier_3 string) error {
 
 	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
 
 	// lecture des matrices dans des fichiers
-	nomFichier_1 := "matriceA.txt"
 	matriceA, err := LireMatriceDuFichier(nomFichier_1)
 	if err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", nomFichier_1, err)
+		//log.Fatalf("Erreur lors de la lecture du fichier %s : %v", nomFichier_1, err)
+		return err
 	}
 
-	nomFichier_2 := "matriceB.txt"
 	matriceB, err := LireMatriceDuFichier(nomFichier_2)
 	if err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", nomFichier_2, err)
+		//log.Fatalf("Erreur lors de la lecture du fichier %s : %v", nomFichier_2, err)
+		return err
 	}
 
 	// produit des deux matrices avec vérification que les matrices soient carrées et de même taille
 	if len(matriceA) != len(matriceB) || len(matriceA) == 0 {
-		log.Fatalf("Les matrices ne sont pas de taille carrée ou sont vides.")
+		//log.Fatalf("Les matrices ne sont pas de taille carrée ou sont vides.")
+		return err
 	}
-	taille := len(matriceA)
 
 	// préparation pour les goroutines avec canal pour stocker chaque ligne de la matrice calculée
 	a := 0
@@ -62,10 +60,11 @@ func main() {
 
 		num_ligne, err := strconv.Atoi(string(u[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 		if err != nil {
-			log.Fatalln("Erreur lors de la conversion en entier")
+			//log.Fatalln("Erreur lors de la conversion en entier")
+			return err
 		}
 
-		fmt.Println(num_ligne)
+		//fmt.Println(num_ligne)
 
 		// insertion du contenu de la ligne dans la matrice résultat
 		ligne := string(u[k+2 : len(u)-1])
@@ -77,9 +76,11 @@ func main() {
 	close(channel)
 
 	// ecriture du résultat du produit dans un fichier
-	nomFichier_3 := "matriceRes.txt"
-	err = EcrireMatriceDansFichier(len(produit), produit, nomFichier_3)
+	err = EcrireMatriceStringDansFichier(len(produit), produit, nomFichier_3)
 	if err != nil {
-		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+		//log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
+		return err
 	}
+
+	return nil
 }
