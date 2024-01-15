@@ -8,11 +8,14 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"time"
 )
 
-const taille int = 9
+const taille int = 15
 
 func main() {
+
+	start := time.Now()
 
 	var matA [taille][taille]int
 	var matB [taille][taille]int
@@ -56,6 +59,9 @@ func main() {
 		fmt.Println("Erreur de réception :", err)
 	}
 
+	t := time.Now()
+	elapsed := t.Sub(start)
+	fmt.Println(elapsed)
 	//fmt.Println(matRes)
 
 }

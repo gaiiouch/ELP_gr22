@@ -1,29 +1,24 @@
 // pour exécuter le programme : go run main.go lecture.go prodMat.go
 
+// commande à lancer pour les tests : go run main.go lecture.go ecriture.go prodMat.go
+
 package main
 
 import (
+	"fmt"
 	"log"
+	"math/rand"
 	"strconv"
 	"sync"
 )
 
+const taille int = 15
+
 // variables à ajouter : taille, matA, matB, matC, ligne, noms des fichiers
-func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille]string, ligne [taille]int, file_name []string) {
+func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille][taille]int, ligne [taille]int, file_name []string) [taille][taille]int {
 
 	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
-
-	// lecture des fichiers contenant les matrices
-	matA, err := LectureMat(taille, matA, file_name[0])
-	if err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
-	}
-
-	matB, err = LectureMat(taille, matB, file_name[1])
-	if err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
-	}
 
 	// préparation pour les goroutines avec canal pour stocker chaque ligne de la matrice calculée
 	a := 0
@@ -54,11 +49,27 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 
 		num_ligne, err := strconv.Atoi(string(data[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 		if err != nil {
-			log.Fatalln("Erreur lors de la conversion en entier")
+			log.Fatalln("Erreur lors de la conversion en entier ligne 50")
 		}
 
 		// insertion du contenu de la ligne dans la matrice résultat
-		ligne := string(data[k+2 : len(data)-1])
+		c := k + 2
+		d := 0
+		for i := k + 2; i < len(data)-1; i += 2 {
+			fmt.Println("hello")
+			if string(data[i]) == " " {
+				fmt.Println(c) //PROBLEME ON NE RENTRE JAMAIS DANS CETTE BOUCLE
+				fmt.Println(i)
+				val, err := strconv.Atoi(string(data[c:i])) // conversion de la première partie de la string en int (numéroDeLaLigne)
+				if err != nil {
+					log.Fatalln("Erreur lors de la conversion en entier ligne 60")
+				}
+				c = i
+				fmt.Println(val)
+				ligne[d] = val
+				d++
+			}
+		}
 		matC[num_ligne] = ligne
 
 	}
@@ -67,9 +78,29 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	close(channel)
 
 	// écriture du résultat dans une matrice pour ensuite l'envoyer au client
-	err = EcritureMatString(taille, matC, file_name[2])
+	err := EcritureMatInt(taille, matC, file_name[2])
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
+	fmt.Println(matC)
+	return matC
+}
 
+func main() {
+
+	var matA [taille][taille]int
+	var matB [taille][taille]int
+	var matRes [taille][taille]int
+
+	for i := 0; i < taille; i++ {
+		for j := 0; j < taille; j++ {
+			matA[i][j] = rand.Intn(10)
+			matB[i][j] = rand.Intn(10)
+		}
+	}
+	fmt.Println(matA)
+	fmt.Println(matB)
+	var ligne [taille]int
+	file_name := []string{"matriceA.txt", "matriceB.txt", "matriceResAB.txt"}
+	matRes = Main(taille, matA, matB, matRes, ligne, file_name)
 }

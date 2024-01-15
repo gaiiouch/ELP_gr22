@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-const taille int = 9
+const taille int = 15
 
 func handle(conn net.Conn) {
 	defer conn.Close()
@@ -20,9 +20,9 @@ func handle(conn net.Conn) {
 	var matA [taille][taille]int
 	var matB [taille][taille]int
 	var matRes [taille][taille]int
-	var matC [taille]string
+	var matC [taille][taille]int
 	var ligne [taille]int
-	file_name := []string{"matriceA.txt", "matriceB.txt", "matriceRes.txt"}
+	file_name := []string{"matriceA.txt", "matriceB.txt", "matriceResAB.txt"}
 
 	// décoder les données reçues du client (bits -> matrices)
 	decoder := gob.NewDecoder(conn)
