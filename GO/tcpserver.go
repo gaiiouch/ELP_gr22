@@ -1,4 +1,4 @@
-// go run tcpserver.go
+// go run tcpserver.go main.go lecture.go ecriture.go prodMat.go
 
 package main
 
