@@ -1,4 +1,4 @@
-// go run tcpserver.go main.go lecture.go ecriture.go prodMat.go
+// go run tcpserver.go main.go ecriture.go prodMat.go
 
 package main
 
@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-const taille int = 15
+const taille int = 5
 
 func handle(conn net.Conn) {
 	defer conn.Close()
@@ -49,12 +49,18 @@ func handle(conn net.Conn) {
 	}
 
 	// calcul du produit
-	Main(taille, matA, matB, matC, ligne, file_name)
+	matRes = Main(taille, matA, matB, matC, ligne, file_name)
 
 	// lecture du fichier où se trouve le résultat
-	matRes, err = LectureMat(taille, matRes, file_name[2])
+	/*
+		matRes, err = LectureMat(taille, matRes, file_name[2])
+		if err != nil {
+			fmt.Printf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
+		}
+	*/
+	err = EcritureMatInt(taille, matRes, file_name[2])
 	if err != nil {
-		fmt.Printf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
+		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
 
 	// encodage du résultat pour l'envoi au client

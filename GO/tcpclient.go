@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const taille int = 15
+const taille int = 5
 
 func main() {
 

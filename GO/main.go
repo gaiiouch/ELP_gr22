@@ -5,14 +5,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"math/rand"
 	"strconv"
 	"sync"
 )
-
-const taille int = 15
 
 // variables à ajouter : taille, matA, matB, matC, ligne, noms des fichiers
 func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille][taille]int, ligne [taille]int, file_name []string) [taille][taille]int {
@@ -37,7 +33,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	// pour chacune récupération de lignes dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
 	for j := 0; j < taille; j++ {
 		data := <-channel // format de data : "numéroDeLaLigne [contenuDeLaLigne]"
-
+		//fmt.Println("les data du channel", data)
 		k := 0
 		// recherche du premier espace dans les strings du canal
 		for {
@@ -55,17 +51,17 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 		// insertion du contenu de la ligne dans la matrice résultat
 		c := k + 2
 		d := 0
-		for i := k + 2; i < len(data)-1; i += 2 {
-			fmt.Println("hello")
-			if string(data[i]) == " " {
-				fmt.Println(c) //PROBLEME ON NE RENTRE JAMAIS DANS CETTE BOUCLE
-				fmt.Println(i)
+		for i := k + 3; i < len(data); i++ {
+			if string(data[i]) == " " || string(data[i]) == "]" {
+				//fmt.Println("variable c", c)
+				//fmt.Println("variable i", i)
+
 				val, err := strconv.Atoi(string(data[c:i])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 				if err != nil {
 					log.Fatalln("Erreur lors de la conversion en entier ligne 60")
 				}
-				c = i
-				fmt.Println(val)
+				c = i + 1
+				//fmt.Println("valeur res", val)
 				ligne[d] = val
 				d++
 			}
@@ -82,10 +78,11 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	if err != nil {
 		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
 	}
-	fmt.Println(matC)
+	//fmt.Println(matC)
 	return matC
 }
 
+/*
 func main() {
 
 	var matA [taille][taille]int
@@ -98,9 +95,10 @@ func main() {
 			matB[i][j] = rand.Intn(10)
 		}
 	}
-	fmt.Println(matA)
-	fmt.Println(matB)
+	//fmt.Println(matA)
+	//fmt.Println(matB)
 	var ligne [taille]int
 	file_name := []string{"matriceA.txt", "matriceB.txt", "matriceResAB.txt"}
 	matRes = Main(taille, matA, matB, matRes, ligne, file_name)
 }
+*/

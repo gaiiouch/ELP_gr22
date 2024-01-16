@@ -1,3 +1,5 @@
+// fichier maintenant inutile car non utilisé
+
 package main
 
 import (
