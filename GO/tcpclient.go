@@ -31,8 +31,7 @@ func main() {
 	// connexion avec le serveur
 	conn, err := net.Dial("tcp", "127.0.0.1:8000")
 	if err != nil {
-		fmt.Println("Erreur lors de la connexion avec le serveur :", err)
-		return
+		log.Fatalln("Erreur lors de la connexion avec le serveur :", err)
 	}
 	defer conn.Close()
 
@@ -40,18 +39,18 @@ func main() {
 	encoder := gob.NewEncoder(conn)
 	err = encoder.Encode(matA) // première matrice
 	if err != nil {
-		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
+		log.Fatalln("Erreur lors de l'envoi de la matrice :", err)
 	}
 	err = encoder.Encode(matB) // deuxième matrice
 	if err != nil {
-		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
+		log.Fatalln("Erreur lors de l'envoi de la matrice :", err)
 	}
 
 	// décodage des données envoyées par le serveur
 	decoder := gob.NewDecoder(conn)
 	err = decoder.Decode(&matRes) // matrice résultat
 	if err != nil {
-		fmt.Println("Erreur de réception :", err)
+		log.Fatalln("Erreur de réception :", err)
 	}
 
 	// temps pour génération des matrices, envoi au serveur, calcul du produit, réception du serveur et décodage du résultat
@@ -62,14 +61,14 @@ func main() {
 	// écriture de chacune des matrices dans un fichier texte (optionnelle)
 	err = EcritureMatInt(taille, matA, file_name[0])
 	if err != nil {
-		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
+		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
 	}
 	err = EcritureMatInt(taille, matB, file_name[1])
 	if err != nil {
-		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
+		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
 	}
 	err = EcritureMatInt(taille, matRes, file_name[2])
 	if err != nil {
-		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
+		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
 	}
 }

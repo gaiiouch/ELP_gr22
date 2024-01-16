@@ -37,7 +37,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 
 		num_ligne, err := strconv.Atoi(string(data[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 		if err != nil {
-			fmt.Println("Erreur lors de la conversion en entier (ligne 37) :", err)
+			fmt.Println("Erreur lors de la conversion en entier (ligne 38) :", err)
 			return matC, err
 		}
 
@@ -46,10 +46,9 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 		y := 0
 		for i := k + 3; i < len(data); i++ {
 			if string(data[i]) == " " || string(data[i]) == "]" {
-
 				val, err := strconv.Atoi(string(data[x:i])) // conversion de la valeur trouvée en int
 				if err != nil {
-					fmt.Println("Erreur lors de la conversion en entier (ligne 49) :", err)
+					fmt.Println("Erreur lors de la conversion en entier (ligne 50) :", err)
 					return matC, err
 				}
 				x = i + 1 // prochain endroit logique où on trouve un début de nombre
