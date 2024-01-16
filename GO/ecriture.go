@@ -5,22 +5,23 @@ import (
 	"os"
 )
 
-func EcrireMatriceStringDansFichier(n int, matrice []string, nomFichier string) error {
+// FONCTION INUTILE
+func EcritureMatString(n int, mat []string, filename string) error {
 
-	fichier, err := os.Create(nomFichier)
+	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
-	defer fichier.Close()
+	defer file.Close()
 
-	// ecriture dans le fichier
+	// ecriture dans le file
 	for i := 0; i < n; i++ {
-		_, err = fmt.Fprintf(fichier, "%s ", matrice[i])
+		_, err = fmt.Fprintf(file, "%s ", mat[i])
 		if err != nil {
 			return err
 		}
 
-		_, err = fmt.Fprintf(fichier, "\n")
+		_, err = fmt.Fprintf(file, "\n")
 		if err != nil {
 			return err
 		}
@@ -29,23 +30,24 @@ func EcrireMatriceStringDansFichier(n int, matrice []string, nomFichier string) 
 	return nil
 }
 
-func EcrireMatriceIntDansFichier(n int, matrice [][]int, nomFichier string) error {
+// écrit une matrice dans un fichier à partir d'une variable matrice déjà créée
+func EcritureMatInt(n int, mat [][]int, filename string) error {
 
-	fichier, err := os.Create(nomFichier)
+	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
-	defer fichier.Close()
+	defer file.Close()
 
 	// ecriture dans le fichier
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
-			_, err = fmt.Fprintf(fichier, "%d ", matrice[i][j])
+			_, err = fmt.Fprintf(file, "%d ", mat[i][j])
 			if err != nil {
 				return err
 			}
 		}
-		_, err = fmt.Fprintf(fichier, "\n")
+		_, err = fmt.Fprintf(file, "\n")
 		if err != nil {
 			return err
 		}

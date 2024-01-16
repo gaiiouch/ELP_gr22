@@ -1,4 +1,4 @@
-// go run tcpclient.go
+// go run tcpclient.go ecriture.go
 
 package main
 
@@ -8,6 +8,7 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"time"
 )
 
 func main() {
@@ -17,10 +18,11 @@ func main() {
 	fmt.Println("Enter a size for matrix :")
 	fmt.Scan(&taille)
 
-	// création des matrices avec des valeurs aléatoire
-	var matA [][]int
-	var matB [][]int
-	var matRes [][]int
+	start := time.Now()
+
+	// creation des variables et des matrices (générées aléatoirement)
+	var matA, matB, matRes [][]int
+	file_name := []string{"matriceA.txt", "matriceB.txt", "matriceResAB.txt"}
 
 	matA = make([][]int, taille)
 	matB = make([][]int, taille)
@@ -33,39 +35,51 @@ func main() {
 		}
 	}
 
-	// demande de connection au serveur
+	// connexion avec le serveur
 	conn, err := net.Dial("tcp", "127.0.0.1:8000")
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalln("Erreur lors de la connexion avec le serveur :", err)
 	}
 	defer conn.Close()
 
-	// encodage des matrices pour les envoyer (matrice -> bits)
+	// encodage des données à envoyer au serveur (matrices -> bits)
 	encoder := gob.NewEncoder(conn)
-
-	err = encoder.Encode(taille)
+	err = encoder.Encode(taille) // taille des matrices
 	if err != nil {
-		log.Fatalf("Erreur lors de l'envoi de la taille : %v", err)
+		log.Fatalln("Erreur lors de l'envoi de la taille :", err)
+	}
+	err = encoder.Encode(matA) // première matrice
+	if err != nil {
+		log.Fatalln("Erreur lors de l'envoi de la matrice :", err)
+	}
+	err = encoder.Encode(matB) // deuxième matrice
+	if err != nil {
+		log.Fatalln("Erreur lors de l'envoi de la matrice :", err)
 	}
 
-	err = encoder.Encode(matA)
-	if err != nil {
-		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
-	}
-
-	err = encoder.Encode(matB)
-	if err != nil {
-		log.Fatalf("Erreur lors de l'envoi de la matrice : %v", err)
-	}
-
-	// décodage de la matrice envoyée par le serveur
+	// décodage des données envoyées par le serveur
 	decoder := gob.NewDecoder(conn)
-
 	err = decoder.Decode(&matRes)
 	if err != nil {
-		fmt.Println("Erreur de réception :", err)
+		log.Fatalln("Erreur de réception :", err)
 	}
 
-	fmt.Println(matRes)
+	// temps pour génération des matrices, envoi au serveur, calcul du produit, réception du serveur et décodage du résultat
+	t := time.Now()
+	elapsed := t.Sub(start)
+	fmt.Println(elapsed)
+
+	// écriture de chacune des matrices dans un fichier texte (optionnelle)
+	err = EcritureMatInt(taille, matA, file_name[0])
+	if err != nil {
+		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
+	}
+	err = EcritureMatInt(taille, matB, file_name[1])
+	if err != nil {
+		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
+	}
+	err = EcritureMatInt(taille, matRes, file_name[2])
+	if err != nil {
+		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
+	}
 }
