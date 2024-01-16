@@ -1,4 +1,4 @@
-// fichier maintenant inutile car non utilisé
+// FICHIER INUTILE
 
 package main
 
@@ -36,5 +36,5 @@ func LectureMat(taille int, mat [taille][taille]int, filename string) ([taille][
 			mat[i][j] = num // ajout à la bonne position dans la matrice
 		}
 	}
-	return mat, err
+	return mat, nil
 }

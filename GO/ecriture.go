@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// écrit une matrice dans un fichier à partir d'une variable matrice déjà créée
+// FONCTION INUTILE
 func EcritureMatString(taille int, mat [taille]string, filename string) error {
 	file, err := os.Create(filename)
 
@@ -26,9 +26,10 @@ func EcritureMatString(taille int, mat [taille]string, filename string) error {
 			return err
 		}
 	}
-	return err
+	return nil
 }
 
+// écrit une matrice dans un fichier à partir d'une variable matrice déjà créée
 func EcritureMatInt(taille int, mat [taille][taille]int, filename string) error {
 	file, err := os.Create(filename)
 
@@ -50,5 +51,5 @@ func EcritureMatInt(taille int, mat [taille][taille]int, filename string) error 
 			return err
 		}
 	}
-	return err
+	return nil
 }

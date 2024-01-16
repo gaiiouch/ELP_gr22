@@ -1,4 +1,4 @@
-// go run tcpserver.go main.go ecriture.go prodMat.go
+// go run tcpserver.go main.go prodMat.go
 
 package main
 
@@ -8,81 +8,64 @@ import (
 	"net"
 )
 
-const taille int = 5
+const taille int = 3
 
 func handle(conn net.Conn) {
 	defer conn.Close()
 
+	// annonce du début d'une connexion
 	remoteAddr := conn.RemoteAddr()
 	fmt.Printf("Connection established with %s\n", remoteAddr)
 
 	// creation des variables et des matrices
-	var matA [taille][taille]int
-	var matB [taille][taille]int
-	var matRes [taille][taille]int
-	var matC [taille][taille]int
+	var matA, matB, matRes [taille][taille]int
 	var ligne [taille]int
-	file_name := []string{"matriceA.txt", "matriceB.txt", "matriceResAB.txt"}
 
 	// décoder les données reçues du client (bits -> matrices)
 	decoder := gob.NewDecoder(conn)
-
-	err := decoder.Decode(&matA) // Première matrice
+	err := decoder.Decode(&matA) // première matrice
 	if err != nil {
-		fmt.Println("Erreur de réception :", err)
+		fmt.Println("	Erreur de réception :", err)
+		return
 	}
-	err = decoder.Decode(&matB) // Deuxième matrice
+	err = decoder.Decode(&matB) // deuxième matrice
 	if err != nil {
-		fmt.Println("Erreur de réception :", err)
-	}
-
-	//fmt.Println(matA)
-	//fmt.Println(matB)
-	err = EcritureMatInt(taille, matA, file_name[0])
-	if err != nil {
-		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
-	}
-
-	err = EcritureMatInt(taille, matB, file_name[1])
-	if err != nil {
-		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
+		fmt.Println("	Erreur de réception :", err)
+		return
 	}
 
 	// calcul du produit
-	matRes = Main(taille, matA, matB, matC, ligne, file_name)
-
-	// lecture du fichier où se trouve le résultat
-	/*
-		matRes, err = LectureMat(taille, matRes, file_name[2])
-		if err != nil {
-			fmt.Printf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
-		}
-	*/
-	err = EcritureMatInt(taille, matRes, file_name[2])
+	matRes, err = Main(taille, matA, matB, matRes, ligne)
 	if err != nil {
-		fmt.Println("Erreur lors de l'écriture dans le fichier : %v", err)
+		fmt.Println("	Erreur du calcul du produit des matrices :", err)
+		return
+	} else {
+		fmt.Println("	Calcul du produit des matrices réussi")
 	}
 
 	// encodage du résultat pour l'envoi au client
 	encoder := gob.NewEncoder(conn)
 	err = encoder.Encode(matRes)
 	if err != nil {
-		fmt.Printf("Erreur lors de l'envoi de la matrice : %v", err)
+		fmt.Printf("	Erreur lors de l'envoi de la matrice : %v", err)
+		return
 	}
 
+	// annonce de la fin de la connexion
 	fmt.Printf("Connection with %s closed\n", remoteAddr)
 }
 
 func main() {
 
-	ln, err := net.Listen("tcp", ":8000") // écoute sur le port 8000
-
+	// écoute sur le port 8000
+	ln, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer ln.Close()
 
+	// acceptation et gestion des connexions entrantes
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
