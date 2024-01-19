@@ -23,7 +23,7 @@ func main() {
 
 	for i := 0; i < taille; i++ {
 		for j := 0; j < taille; j++ {
-			matA[i][j] = rand.Intn(10) + 5
+			matA[i][j] = rand.Intn(10)
 			matB[i][j] = rand.Intn(10)
 		}
 	}
