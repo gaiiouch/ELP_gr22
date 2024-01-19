@@ -16,10 +16,13 @@ Au final, il y a deux versions du code, les légères différences n'influant pa
 - Dans la première version, il faut changer la valeur de la constante "taille" des matrices voulues à la main dans les fichiers tcpclient.go et tcpserver.go.
 - Dans la deuxième version, on peut décider de la taille des matrices lors de l'exécution de tcpclients.go grâce à un système de slices.
 
+Pour lancer les fichiers, les commandes à écrire dans les terminaux sont notées en commentaire en haut des fichiers tcpclient.go et tcpserver.go. 
+Il faut lancer le serveur avant le client.
+
 ## Projet ELM
 
-à venir
+à venir ...
 
 ## Projet JavaScript
 
-à venir
+à venir ...
