@@ -1,72 +1,66 @@
-// pour exécuter le programme : go run .
-
 package main
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 	"sync"
 )
 
-const taille int = 9
+// exécute les goroutines pour la multiplication de 2 matrices et traitement des résultats stockés dans un channel
+func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille][taille]int, ligne [taille]int) ([taille][taille]int, error) {
 
-func main() {
-
+	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
 
-	var matA [taille][taille]int
-	var matB [taille][taille]int
-
-	matA = LectureMat(taille, matA, "matriceA.txt")
-	matB = LectureMat(taille, matB, "matriceB.txt")
-
-	a := 0
-	b := 1
+	// préparation pour les goroutines avec canal pour stocker chaque ligne de la matrice calculée
 	nb_goroutines := taille
 	channel := make(chan string)
-	wg.Add(nb_goroutines)
+	wg.Add(nb_goroutines) // nb de goroutines à attendre
 
+	// pour chaque ligne de la première matrice, on calcule via les goroutines la ligne correspondante pour la matrice résultat
 	for i := 0; i < taille; i++ {
-		var ligne [taille]int
-		go ProdMat(taille, matA, matB, ligne, a, b, channel, &wg)
-		a++
-		b++
+		go ProdMat(taille, matA, matB, ligne, i, channel, &wg)
 	}
 
-	var matC [taille]string
+	// pour chacune des lignes récupérées dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
+	for j := 0; j < taille; j++ {
+		data := <-channel // format de data : "numéroDeLaLigne [contenuDeLaLigne]"
 
-	for v := 0; v < taille; v++ {
-		u := <-channel
-
+		// recherche du premier espace dans les strings du canal
 		k := 0
 		for {
-			if string(u[k]) == " " {
+			if string(data[k]) == " " {
 				break
 			}
 			k++
 		}
 
-		num_ligne, err := strconv.Atoi(string(u[:k]))
-
+		num_ligne, err := strconv.Atoi(string(data[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 		if err != nil {
-			log.Fatalln("Erreur lors de la conversion en entier")
+			fmt.Println("Erreur lors de la conversion en entier (ligne 38) :", err)
+			return matC, err
 		}
 
-		//fmt.Println(u, num_ligne)
-
-		ligne := string(u[k+2 : len(u)-1])
-		//fmt.Println(ligne)
-
-		matC[num_ligne] = ligne
-
+		// insertion du contenu de la ligne dans la matrice résultat
+		x := k + 2 // premier endroit logique où on trouve un début de nombre
+		y := 0
+		for i := k + 3; i < len(data); i++ {
+			if string(data[i]) == " " || string(data[i]) == "]" {
+				val, err := strconv.Atoi(string(data[x:i])) // conversion de la valeur trouvée en int
+				if err != nil {
+					fmt.Println("Erreur lors de la conversion en entier (ligne 50) :", err)
+					return matC, err
+				}
+				x = i + 1 // prochain endroit logique où on trouve un début de nombre
+				ligne[y] = val
+				y++
+			}
+		}
+		matC[num_ligne] = ligne // ajout de la ligne à la matrice résultat
 	}
 
-	wg.Wait()
-	close(channel)
+	wg.Wait()      // attendre que toutes les goroutines soient finies
+	close(channel) //fermeture du channel
 
-	//matC = ProdMat(taille, matA, matB, a, b)
-	//fmt.Println(matC)
-
-	EcritureMat(taille, matC, "matriceRes.txt")
-
+	return matC, nil
 }
