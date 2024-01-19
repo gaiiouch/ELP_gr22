@@ -1,50 +1,33 @@
-// pour exécuter le programme : go run main.go lecture.go prodMat.go
-
 package main
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 	"sync"
 )
 
-// variables à ajouter : taille, matA, matB, matC, ligne, noms des fichiers
-func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille]string, ligne [taille]int, file_name []string) {
+// exécute les goroutines pour la multiplication de 2 matrices et traitement des résultats stockés dans un channel
+func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille][taille]int, ligne [taille]int) ([taille][taille]int, error) {
 
 	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
 
-	// lecture des fichiers contenant les matrices
-	matA, err := LectureMat(taille, matA, file_name[0])
-	if err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
-	}
-
-	matB, err = LectureMat(taille, matB, file_name[1])
-	if err != nil {
-		log.Fatalf("Erreur lors de la lecture du fichier %s : %v", file_name, err)
-	}
-
 	// préparation pour les goroutines avec canal pour stocker chaque ligne de la matrice calculée
-	a := 0
-	b := 1 // ACTUELLEMENT INUTILE SI ON FAIT LIGNE PAR LIGNE
 	nb_goroutines := taille
 	channel := make(chan string)
 	wg.Add(nb_goroutines) // nb de goroutines à attendre
 
 	// pour chaque ligne de la première matrice, on calcule via les goroutines la ligne correspondante pour la matrice résultat
 	for i := 0; i < taille; i++ {
-		go ProdMat(taille, matA, matB, ligne, a, b, channel, &wg)
-		a++
-		b++
+		go ProdMat(taille, matA, matB, ligne, i, channel, &wg)
 	}
 
-	// pour chacune récupération de lignes dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
+	// pour chacune des lignes récupérées dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
 	for j := 0; j < taille; j++ {
 		data := <-channel // format de data : "numéroDeLaLigne [contenuDeLaLigne]"
 
-		k := 0
 		// recherche du premier espace dans les strings du canal
+		k := 0
 		for {
 			if string(data[k]) == " " {
 				break
@@ -54,22 +37,30 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 
 		num_ligne, err := strconv.Atoi(string(data[:k])) // conversion de la première partie de la string en int (numéroDeLaLigne)
 		if err != nil {
-			log.Fatalln("Erreur lors de la conversion en entier")
+			fmt.Println("Erreur lors de la conversion en entier (ligne 38) :", err)
+			return matC, err
 		}
 
 		// insertion du contenu de la ligne dans la matrice résultat
-		ligne := string(data[k+2 : len(data)-1])
-		matC[num_ligne] = ligne
-
+		x := k + 2 // premier endroit logique où on trouve un début de nombre
+		y := 0
+		for i := k + 3; i < len(data); i++ {
+			if string(data[i]) == " " || string(data[i]) == "]" {
+				val, err := strconv.Atoi(string(data[x:i])) // conversion de la valeur trouvée en int
+				if err != nil {
+					fmt.Println("Erreur lors de la conversion en entier (ligne 50) :", err)
+					return matC, err
+				}
+				x = i + 1 // prochain endroit logique où on trouve un début de nombre
+				ligne[y] = val
+				y++
+			}
+		}
+		matC[num_ligne] = ligne // ajout de la ligne à la matrice résultat
 	}
 
-	wg.Wait()
-	close(channel)
+	wg.Wait()      // attendre que toutes les goroutines soient finies
+	close(channel) //fermeture du channel
 
-	// écriture du résultat dans une matrice pour ensuite l'envoyer au client
-	err = EcritureMatString(taille, matC, file_name[2])
-	if err != nil {
-		log.Fatalf("Erreur lors de l'écriture dans le fichier : %v", err)
-	}
-
+	return matC, nil
 }
