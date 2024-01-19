@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-const taille int = 3
+const taille int = 15
 
 func handle(conn net.Conn) {
 	defer conn.Close()

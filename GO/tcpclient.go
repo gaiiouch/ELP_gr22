@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const taille int = 3
+const taille int = 15
 
 func main() {
 
@@ -59,15 +59,15 @@ func main() {
 	fmt.Println(elapsed)
 
 	// écriture de chacune des matrices dans un fichier texte (optionnelle)
-	err = EcritureMatInt(taille, matA, file_name[0])
+	err = EcritureMat(taille, matA, file_name[0])
 	if err != nil {
 		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
 	}
-	err = EcritureMatInt(taille, matB, file_name[1])
+	err = EcritureMat(taille, matB, file_name[1])
 	if err != nil {
 		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
 	}
-	err = EcritureMatInt(taille, matRes, file_name[2])
+	err = EcritureMat(taille, matRes, file_name[2])
 	if err != nil {
 		log.Fatalln("Erreur lors de l'écriture dans le fichier :", err)
 	}
