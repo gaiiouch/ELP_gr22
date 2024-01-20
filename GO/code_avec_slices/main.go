@@ -22,7 +22,6 @@ func Main(taille int, matA [][]int, matB [][]int) ([][]int, error) {
 	}
 
 	// création du tableau pour le résultat final
-	ligne := make([]int, taille)
 	matC := make([][]int, taille)
 
 	// pour chacune récupération de lignes dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
@@ -44,6 +43,7 @@ func Main(taille int, matA [][]int, matB [][]int) ([][]int, error) {
 		}
 
 		// insertion du contenu de la ligne dans la matrice résultat
+		ligne := make([]int, taille)
 		x := k + 2 // premier endroit logique où on trouve un début de nombre
 		y := 0
 		for i := k + 3; i < len(data); i++ {
@@ -51,7 +51,7 @@ func Main(taille int, matA [][]int, matB [][]int) ([][]int, error) {
 
 				val, err := strconv.Atoi(string(data[x:i])) // conversion de la valeur trouvée en int
 				if err != nil {
-					fmt.Println("Erreur lors de la conversion en entier (ligne 49) :", err)
+					fmt.Println("Erreur lors de la conversion en entier :", err)
 					return nil, err
 				}
 				x = i + 1 // prochain endroit logique où on trouve un début de nombre
@@ -60,7 +60,6 @@ func Main(taille int, matA [][]int, matB [][]int) ([][]int, error) {
 			}
 		}
 		matC[num_ligne] = ligne // ajout de la ligne à la matrice résultat
-
 	}
 
 	wg.Wait()
