@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"sync"
 )
 
@@ -14,14 +13,14 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	*/
 
 	type LigneMat struct {
-		num_ligne int
-		ligne     [taille]int
+		num_ligne     int
+		contenu_ligne int
 	}
 
 	var wg sync.WaitGroup
 
 	nb_goroutines := taille
-	channel := make(chan string)
+	channel := make(chan LigneMat)
 	wg.Add(nb_goroutines)
 
 	for i := 0; i < taille; i++ {
@@ -31,8 +30,9 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	// pour chacune des lignes récupérées dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
 	for j := 0; j < taille; j++ {
 		data := <-channel
-
-		k := 0
+		fmt.Println(data)
+	}
+	/*		k := 0
 		for {
 			if string(data[k]) == " " {
 				break
@@ -63,7 +63,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 		}
 		matC[num_ligne] = ligne
 	}
-
+	*/
 	wg.Wait()
 	close(channel)
 
