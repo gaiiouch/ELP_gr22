@@ -18,7 +18,6 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 		ligne     [taille]int
 	}
 
-	// ouverture du wait group pour les go routines
 	var wg sync.WaitGroup
 
 	nb_goroutines := taille
@@ -62,7 +61,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 				y++
 			}
 		}
-		matC[num_ligne] = ligne // ajout de la ligne à la matrice résultat
+		matC[num_ligne] = ligne
 	}
 
 	wg.Wait()

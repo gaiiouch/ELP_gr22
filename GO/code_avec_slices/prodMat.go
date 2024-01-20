@@ -5,8 +5,10 @@ import (
 	"sync"
 )
 
-// calcule le produit d'une ligne avec une matrice carrée
 func ProduitMatrices(A [][]int, B [][]int, i int, channel chan string, wg *sync.WaitGroup) {
+	/*
+	 calcule le produit d'une ligne avec une matrice carrée
+	*/
 
 	defer wg.Done()
 	n := len(A)
