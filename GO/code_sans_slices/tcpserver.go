@@ -11,24 +11,27 @@ import (
 const taille int = 15
 
 func handle(conn net.Conn) {
+	/*
+		Réceptionne les matrices envoyées par le client et lance le calcul du résultat du produit.
+		Envoie le résultat au client.
+	*/
+
 	defer conn.Close()
 
-	// annonce du début d'une connexion
 	remoteAddr := conn.RemoteAddr()
 	fmt.Printf("Connection established with %s\n", remoteAddr)
 
-	// creation des variables et des matrices
 	var matA, matB, matRes [taille][taille]int
 	var ligne [taille]int
 
 	// décoder les données reçues du client (bits -> matrices)
 	decoder := gob.NewDecoder(conn)
-	err := decoder.Decode(&matA) // première matrice
+	err := decoder.Decode(&matA)
 	if err != nil {
 		fmt.Println("	Erreur de réception :", err)
 		return
 	}
-	err = decoder.Decode(&matB) // deuxième matrice
+	err = decoder.Decode(&matB)
 	if err != nil {
 		fmt.Println("	Erreur de réception :", err)
 		return
@@ -51,11 +54,13 @@ func handle(conn net.Conn) {
 		return
 	}
 
-	// annonce de la fin de la connexion
 	fmt.Printf("Connection with %s closed\n", remoteAddr)
 }
 
 func main() {
+	/*
+		Mets en place un serveur TCP qui attend d'établir le lien avec un client.
+	*/
 
 	// écoute sur le port 8000
 	ln, err := net.Listen("tcp", ":8000")
