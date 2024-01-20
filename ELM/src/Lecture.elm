@@ -38,7 +38,7 @@ init : () -> (Model, Cmd Msg)
 init _ =
   ( Loading
   , Http.get
-      { url = "https://perso.liris.cnrs.fr/tristan.roussillon/GuessIt/thousand_words_things_explainer.txt"
+      { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/debut_elm/ELM/thousand_words_things_explainer.txt"
       , expect = Http.expectString GotText
       }
   )
