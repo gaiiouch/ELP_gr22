@@ -20,7 +20,6 @@ func ProdMat(A [][]int, B [][]int, i int, channel chan LigneMat, wg *sync.WaitGr
 		}
 	}
 	l := LigneMat{num_ligne: i, contenu_ligne: C}
-	//chaine := fmt.Sprintf("%d %d", i, resultat) // i = numéro de la ligne calculée ; resultat = contenu de la ligne
 	channel <- l
 
 }

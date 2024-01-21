@@ -18,6 +18,5 @@ func ProdMat(taille int, A [taille][taille]int, B [taille][taille]int, C [taille
 		}
 	}
 	l := LigneMat{num_ligne: i, contenu_ligne: C}
-	// chaine := fmt.Sprintf("%d %d", i, C) // i = numéro de la ligne calculée ; C = contenu de la ligne
 	channel <- l
 }
