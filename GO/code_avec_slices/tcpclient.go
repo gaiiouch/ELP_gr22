@@ -12,6 +12,12 @@ import (
 )
 
 func main() {
+	/*
+		Génère aléatoirement des matrices de taille taille.
+		Mets en place un client TCP pour envoyer ces matrices à un serveur.
+		Récupère la matrice résultat
+		Ecrit chacune des trois matrices dans un fichier texte différent
+	*/
 
 	// demande à l'utilisateur pour la taille des matrices
 	var taille int
@@ -44,15 +50,15 @@ func main() {
 
 	// encodage des données à envoyer au serveur (matrices -> bits)
 	encoder := gob.NewEncoder(conn)
-	err = encoder.Encode(taille) // taille des matrices
+	err = encoder.Encode(taille)
 	if err != nil {
 		log.Fatalln("Erreur lors de l'envoi de la taille :", err)
 	}
-	err = encoder.Encode(matA) // première matrice
+	err = encoder.Encode(matA)
 	if err != nil {
 		log.Fatalln("Erreur lors de l'envoi de la matrice :", err)
 	}
-	err = encoder.Encode(matB) // deuxième matrice
+	err = encoder.Encode(matB)
 	if err != nil {
 		log.Fatalln("Erreur lors de l'envoi de la matrice :", err)
 	}
