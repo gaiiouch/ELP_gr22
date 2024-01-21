@@ -1,10 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
 	"sync"
 )
+
+type LigneMat struct {
+	num_ligne     int
+	contenu_ligne [taille]int
+}
 
 func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [taille][taille]int, ligne [taille]int) ([taille][taille]int, error) {
 	/*
@@ -16,7 +19,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	var wg sync.WaitGroup
 
 	nb_goroutines := taille
-	channel := make(chan string)
+	channel := make(chan LigneMat)
 	wg.Add(nb_goroutines)
 
 	for i := 0; i < taille; i++ {
@@ -26,37 +29,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 	// pour chacune des lignes récupérées dans le channel, on idenfie la ligne correspondante et on l'inclue dans la matrice résultat à la bonne position
 	for j := 0; j < taille; j++ {
 		data := <-channel
-
-		k := 0
-		for {
-			if string(data[k]) == " " {
-				break
-			}
-			k++
-		}
-
-		num_ligne, err := strconv.Atoi(string(data[:k]))
-		if err != nil {
-			fmt.Println("Erreur lors de la conversion en entier :", err)
-			return matC, err
-		}
-
-		// convertion et insertion du contenu de la ligne dans la matrice résultat
-		x := k + 2
-		y := 0
-		for i := k + 3; i < len(data); i++ {
-			if string(data[i]) == " " || string(data[i]) == "]" {
-				val, err := strconv.Atoi(string(data[x:i]))
-				if err != nil {
-					fmt.Println("Erreur lors de la conversion en entier :", err)
-					return matC, err
-				}
-				x = i + 1
-				ligne[y] = val
-				y++
-			}
-		}
-		matC[num_ligne] = ligne
+		matC[data.num_ligne] = data.contenu_ligne
 	}
 
 	wg.Wait()
