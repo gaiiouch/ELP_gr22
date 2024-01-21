@@ -43,7 +43,7 @@ init : () -> ((Model, Cmd Msg))
 init _ =
   ( Model "" "" "" False
   , Http.get
-      { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/debut_elm/ELM/thousand_words_things_explainer.txt"
+      { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/main/ELM/thousand_words_things_explainer.txt"
       , expect = Http.expectString GotText
       }
   )
@@ -106,7 +106,7 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     if model.text == "Error" then
-        div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file"]
+        div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file."]
     else 
         div [style "font-family" "Noto Sans, sans-serif"]
             [ viewShowAnswer model
