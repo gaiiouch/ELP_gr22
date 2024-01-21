@@ -13,11 +13,6 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 		Retourne la matrice résultat de la multiplication
 	*/
 
-	type LigneMat struct {
-		num_ligne int
-		ligne     [taille]int
-	}
-
 	var wg sync.WaitGroup
 
 	nb_goroutines := taille
@@ -42,7 +37,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 
 		num_ligne, err := strconv.Atoi(string(data[:k]))
 		if err != nil {
-			fmt.Println("Erreur lors de la conversion en entier (ligne 38) :", err)
+			fmt.Println("Erreur lors de la conversion en entier :", err)
 			return matC, err
 		}
 
@@ -53,7 +48,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 			if string(data[i]) == " " || string(data[i]) == "]" {
 				val, err := strconv.Atoi(string(data[x:i]))
 				if err != nil {
-					fmt.Println("Erreur lors de la conversion en entier (ligne 50) :", err)
+					fmt.Println("Erreur lors de la conversion en entier :", err)
 					return matC, err
 				}
 				x = i + 1

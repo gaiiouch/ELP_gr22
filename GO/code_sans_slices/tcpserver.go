@@ -58,8 +58,10 @@ func handle(conn net.Conn) {
 }
 
 func main() {
+	/*
+		création du serveur TCP avec écoute et gestion des connexions entrantes
+	*/
 
-	// écoute sur le port 8000
 	ln, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		fmt.Println(err)
@@ -67,7 +69,6 @@ func main() {
 	}
 	defer ln.Close()
 
-	// acceptation et gestion des connexions entrantes
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
