@@ -14,7 +14,7 @@ En troisième étape, nous avons ajouté un système de client qui envoie les ma
 
 Au final, il y a deux versions du code, les légères différences n'influant pas sur le fonctionnement global des go routines et du système client-serveur TCP. 
 - Dans la première version, il faut changer la valeur de la constante "taille" des matrices voulues à la main dans les fichiers tcpclient.go et tcpserver.go.
-- Dans la deuxième version, on peut décider de la taille des matrices lors de l'exécution de tcpclients.go grâce à un système de slices.
+- Dans la deuxième version, l'utilisateur peut décider de la taille des matrices lors de l'exécution de tcpclient.go grâce à un système de slices.
 
 Pour lancer les fichiers, les commandes à écrire dans les terminaux sont notées en commentaire en haut des fichiers tcpclient.go et tcpserver.go. 
 Il faut lancer le serveur avant le client.
