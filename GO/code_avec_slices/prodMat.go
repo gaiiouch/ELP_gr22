@@ -1,27 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 )
 
-func ProduitMatrices(A [][]int, B [][]int, i int, channel chan string, wg *sync.WaitGroup) {
+func ProduitMatrices(A [][]int, B [][]int, i int, channel chan LigneMat, wg *sync.WaitGroup) {
 	/*
 	 calcule le produit d'une ligne avec une matrice carrée
 	*/
 
 	defer wg.Done()
 	n := len(A)
-	resultat := make([]int, n)
+	C := make([]int, n)
 
 	for j := 0; j < n; j++ {
-		resultat[j] = 0
+		C[j] = 0
 		for k := 0; k < n; k++ {
-			resultat[j] = resultat[j] + A[i][k]*B[k][j]
+			C[j] = C[j] + A[i][k]*B[k][j]
 		}
 	}
-
-	chaine := fmt.Sprintf("%d %d", i, resultat) // i = numéro de la ligne calculée ; resultat = contenu de la ligne
-	channel <- chaine
+	l := LigneMat{num_ligne: i, contenu_ligne: C}
+	//chaine := fmt.Sprintf("%d %d", i, resultat) // i = numéro de la ligne calculée ; resultat = contenu de la ligne
+	channel <- l
 
 }
