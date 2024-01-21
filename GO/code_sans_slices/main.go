@@ -31,38 +31,7 @@ func Main(taille int, matA [taille][taille]int, matB [taille][taille]int, matC [
 		data := <-channel
 		matC[data.num_ligne] = data.contenu_ligne
 	}
-	/*		k := 0
-		for {
-			if string(data[k]) == " " {
-				break
-			}
-			k++
-		}
 
-		num_ligne, err := strconv.Atoi(string(data[:k]))
-		if err != nil {
-			fmt.Println("Erreur lors de la conversion en entier (ligne 38) :", err)
-			return matC, err
-		}
-
-		// convertion et insertion du contenu de la ligne dans la matrice résultat
-		x := k + 2
-		y := 0
-		for i := k + 3; i < len(data); i++ {
-			if string(data[i]) == " " || string(data[i]) == "]" {
-				val, err := strconv.Atoi(string(data[x:i]))
-				if err != nil {
-					fmt.Println("Erreur lors de la conversion en entier (ligne 50) :", err)
-					return matC, err
-				}
-				x = i + 1
-				ligne[y] = val
-				y++
-			}
-		}
-		matC[num_ligne] = ligne
-	}
-	*/
 	wg.Wait()
 	close(channel)
 

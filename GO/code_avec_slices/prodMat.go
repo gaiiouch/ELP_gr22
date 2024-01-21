@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-func ProduitMatrices(A [][]int, B [][]int, i int, channel chan LigneMat, wg *sync.WaitGroup) {
+func ProdMat(A [][]int, B [][]int, i int, channel chan LigneMat, wg *sync.WaitGroup) {
 	/*
 	 calcule le produit d'une ligne avec une matrice carrée
 	*/

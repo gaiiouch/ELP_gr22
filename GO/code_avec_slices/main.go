@@ -23,7 +23,7 @@ func Main(taille int, matA [][]int, matB [][]int) ([][]int, error) {
 	wg.Add(nb_goroutines)
 
 	for i := 0; i < taille; i++ {
-		go ProduitMatrices(matA, matB, i, channel, &wg)
+		go ProdMat(matA, matB, i, channel, &wg)
 	}
 
 	matC := make([][]int, taille)
@@ -32,39 +32,6 @@ func Main(taille int, matA [][]int, matB [][]int) ([][]int, error) {
 	for j := 0; j < taille; j++ {
 		data := <-channel
 		matC[data.num_ligne] = data.contenu_ligne
-		/*
-			k := 0
-			for {
-				if string(data[k]) == " " {
-					break
-				}
-				k++
-			}
-
-			num_ligne, err := strconv.Atoi(string(data[:k]))
-			if err != nil {
-				fmt.Println("Erreur lors de la conversion en entier :", err)
-				return nil, err
-			}
-
-			// insertion du contenu de la ligne dans la matrice résultat
-			ligne := make([]int, taille)
-			x := k + 2
-			y := 0
-			for i := k + 3; i < len(data); i++ {
-				if string(data[i]) == " " || string(data[i]) == "]" {
-
-					val, err := strconv.Atoi(string(data[x:i]))
-					if err != nil {
-						fmt.Println("Erreur lors de la conversion en entier :", err)
-						return nil, err
-					}
-					x = i + 1
-					ligne[y] = val
-					y++
-				}
-			}
-			matC[num_ligne] = ligne*/
 	}
 
 	wg.Wait()
