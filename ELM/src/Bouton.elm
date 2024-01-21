@@ -1,4 +1,4 @@
-module Appli exposing (..)
+module Bouton exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, text, input)
