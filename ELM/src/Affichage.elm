@@ -102,8 +102,15 @@ update msg model =
         Err _ ->
           ({model | def = []}, Cmd.none)
       
+  --  NewWord number ->
+    --    ({ model | answer = (getRandomString (String.split " " model.text) number) }, getWord model.answer)
+    
     NewWord number ->
-        ({ model | answer = (getRandomString (String.split " " model.text) number) }, getWord model.answer)
+      let
+        newWord = getRandomString (String.split " " model.text) number
+        newModel = { model | answer = newWord, userInput = "", isChecked = False }
+      in
+      (newModel, getWord newWord)
 
     Change newInput -> ({ model | userInput = newInput }, Cmd.none)
     
@@ -123,8 +130,8 @@ getRandomString list x =
 getWord : String -> Cmd Msg
 getWord word =
   Http.get
-    { url = ("https://api.dictionaryapi.dev/api/v2/entries/en/" ++ word)
-    , expect = Http.expectJson GotDef defDecoder
+    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ word 
+    , expect = Http.expectJson GotDef  defDecoder
     }
 
 defDecoder : Decoder (List Def)
