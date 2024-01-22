@@ -1,10 +1,10 @@
 module Affichage exposing (..)
 
--- Press a button to generate a random number between 1 and 6.
 --
--- Read how it works:
---   https://guide.elm-lang.org/effects/random.html
---
+-- From a list a word, pick a random word and display its definition
+-- The user have to guess which word is behind that definition
+-- 
+
 
 import Browser
 import Html exposing (Html, text, pre, div, input, button)
@@ -16,10 +16,10 @@ import List.Extra exposing (getAt)
 import Json.Decode exposing (Decoder, map2, field, string, list)
 
 
-
 -- MAIN
 
 
+main : Program () Model Msg
 main =
   Browser.element
     { init = init
@@ -29,8 +29,8 @@ main =
     }
 
 
-
 -- MODEL
+
 
 type alias Model =
   { userInput : String
@@ -40,10 +40,12 @@ type alias Model =
   , def : List Def
   }
 
+
 type alias Def =
     { word : String
     , meanings : List Meaning
     }
+
 
 type alias Meaning =
     { partOfSpeech : String 
@@ -59,7 +61,6 @@ init _ =
       , expect = Http.expectString GotText
       }
   )
-
 
 
 -- UPDATE
@@ -109,12 +110,12 @@ update msg model =
         ({ model | isChecked = not model.isChecked }, Cmd.none)
 
 
-
 getRandomString : List String -> Int -> String
 getRandomString list x =
     case (getAt x list) of
         Just a -> a
         Nothing -> "Valeur inexistante"
+
 
 getWord : String -> Cmd Msg
 getWord word =
@@ -122,6 +123,7 @@ getWord word =
     { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ word 
     , expect = Http.expectJson GotDef defDecoder
     }
+
 
 defDecoder : Decoder (List Def)
 defDecoder =
