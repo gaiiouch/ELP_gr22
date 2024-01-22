@@ -15,7 +15,6 @@ import Random
 import List.Extra exposing (getAt)
 import Json.Decode exposing (Decoder, map2, field, string, list)
 import Json.Decode exposing (Error(..))
-import Definitions exposing (Model(..))
 
 
 -- MAIN
