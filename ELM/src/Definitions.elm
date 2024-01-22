@@ -9,7 +9,7 @@ import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (..)
 import Http
-import Json.Decode exposing (Decoder, map4, field, int, string, list)
+import Json.Decode exposing (Decoder, map2, field, int, string, list)
 
 
 
@@ -36,8 +36,14 @@ type Model
 
 
 type alias Def =
-  { word : String
-  }
+    { word : String
+    , meanings : List Meaning
+    }
+
+type alias Meaning =
+    { partOfSpeech : String 
+    , definitions : List String
+    }
 
 
 init : () -> (Model, Cmd Msg)
@@ -107,10 +113,16 @@ viewQuote model =
         case lst of 
             [] -> div []
                 [text "vide..."] 
-            (x :: xs) -> div []
-                [ button [ onClick MorePlease, style "display" "block" ] [ text "More Please!" ]
-                , blockquote [] [ text x.word ]
-                ]
+            (x :: xs) ->
+                case x.meanings of
+                    [] -> div [] [text "vide..."] 
+                    (y::ys) ->  
+                        case y.definitions of
+                            [] -> div [] [text "vide..."] 
+                            (z::zs) -> div [] [ blockquote [] [ text x.word ]
+                                , blockquote [] [ text y.partOfSpeech ]
+                                , blockquote [] [ text z ]
+                                ]
 
 
 
@@ -122,8 +134,15 @@ defDecoder =
 
 listDecodage : Decoder Def
 listDecodage =
-    Json.Decode.map Def
+    map2 Def
         (field "word" string)
+        (field "meanings" (list meaningDecodage))
+
+meaningDecodage : Decoder Meaning
+meaningDecodage =
+    map2 Meaning
+        (field "partOfSpeech" string)
+        (field "definitions" (list (field "definition" string)))
 
 
 getWord : Cmd Msg
