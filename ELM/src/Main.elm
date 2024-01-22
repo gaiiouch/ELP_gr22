@@ -1,4 +1,4 @@
-module Affichage exposing (..)
+module Main exposing (..)
 
 --
 -- From a list a word, pick a random word and display its definition
@@ -66,11 +66,16 @@ type alias Meaning =
 init : () -> ((Model, Cmd Msg))
 init _ =
   ( Model "" "" "" False [] Loading
-  , Http.get
+  , getText
+  )
+
+
+getText : Cmd Msg
+getText =
+  Http.get
       { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/main/ELM/thousand_words_things_explainer.txt"
       , expect = Http.expectString GotText
       }
-  )
 
 
 -- UPDATE
