@@ -110,20 +110,27 @@ viewQuote model =
         [ text "Loading..."    ]
 
     Success lst ->
-        case lst of 
-            [] -> div []
-                [text "vide..."] 
-            (x :: xs) ->
-                case x.meanings of
-                    [] -> div [] [text "vide..."] 
-                    (y::ys) ->  
-                        case y.definitions of
-                            [] -> div [] [text "vide..."] 
-                            (z::zs) -> div [] [ blockquote [] [ text x.word ]
-                                , blockquote [] [ text y.partOfSpeech ]
-                                , blockquote [] [ text z ]
-                                ]
+        pre [] 
+          (recur1 lst)
 
+
+recur1 : List Def -> List (Html Msg)
+recur1  list =
+    case list of 
+        [] -> []
+        (x :: xs) -> [ text (x.word ++ "\n") ] ++ recur2(x.meanings) ++ recur1(xs)
+
+recur2 : List Meaning -> List (Html Msg)
+recur2  list =
+    case list of 
+        [] -> []
+        (x :: xs) -> [ text ("  " ++ x.partOfSpeech ++ "\n") ] ++ recur3(x.definitions) ++ recur2(xs)
+
+recur3 : List String -> List (Html Msg)
+recur3  list =
+    case list of 
+        [] -> []
+        (x :: xs) -> [text ("       - " ++ x ++ "\n")] ++ recur3(xs)
 
 
 -- HTTP
@@ -148,7 +155,7 @@ meaningDecodage =
 getWord : Cmd Msg
 getWord =
   Http.get
-    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
+    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/wife"
     , expect = Http.expectJson GotQuote defDecoder
     }
 
