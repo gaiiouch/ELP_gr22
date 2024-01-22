@@ -13,7 +13,7 @@ import Html.Attributes exposing (..)
 import Http
 import Random
 import List.Extra exposing (getAt)
-import Json.Decode exposing (Decoder, field, int, string, at, decodeString)
+import Json.Decode exposing (Decoder, map2, field, string, list)
 
 
 
@@ -37,18 +37,23 @@ type alias Model =
   , answer : String
   , text : String
   , isChecked : Bool
+  , def : List Def
   }
 
 type alias Def =
-  { word : String
-  -- , partOfSpeech : String
-  -- , def : String
-  }
+    { word : String
+    , meanings : List Meaning
+    }
+
+type alias Meaning =
+    { partOfSpeech : String 
+    , definitions : List String
+    }
 
 
 init : () -> ((Model, Cmd Msg))
 init _ =
-  ( Model "" "" "" False
+  ( Model "" "" "" False []
   , Http.get
       { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/main/ELM/thousand_words_things_explainer.txt"
       , expect = Http.expectString GotText
@@ -62,7 +67,8 @@ init _ =
 
 type Msg
   = GotText (Result Http.Error String)
-  | GotDef (Result Http.Error String)
+  | GotWord (Result Http.Error String)
+  | GotDef (Result Http.Error (List Def))
   | NewWord Int
   | Change String
   | Erase
@@ -80,16 +86,24 @@ update msg model =
         Err _ ->
           ({ model | text = "Error" }, Cmd.none)
 
-    GotDef result ->
+    GotWord result ->
       case result of
         Ok fullText ->
           ({ model | text = fullText }, Random.generate NewWord (Random.int 0 (List.length (String.split " " fullText))))
 
         Err _ ->
           ({ model | text = "Error" }, Cmd.none)
+    
+    GotDef result ->
+      case result of
+        Ok definition ->
+          ({model | def = definition }, Cmd.none)
 
+        Err _ ->
+          ({model | def = []}, Cmd.none)
+      
     NewWord number ->
-        ({ model | answer = (getRandomString (String.split " " model.text) number) }, Cmd.none)
+        ({ model | answer = (getRandomString (String.split " " model.text) number) }, getWord model.answer)
 
     Change newInput -> ({ model | userInput = newInput }, Cmd.none)
     
@@ -105,6 +119,29 @@ getRandomString list x =
     case (getAt x list) of
         Just a -> a
         Nothing -> "Valeur inexistante"
+
+getWord : String -> Cmd Msg
+getWord word =
+  Http.get
+    { url = ("https://api.dictionaryapi.dev/api/v2/entries/en/" ++ word)
+    , expect = Http.expectJson GotDef defDecoder
+    }
+
+defDecoder : Decoder (List Def)
+defDecoder =
+    Json.Decode.list listDecodage
+
+listDecodage : Decoder Def
+listDecodage =
+    map2 Def
+        (field "word" string)
+        (field "meanings" (Json.Decode.list meaningDecodage))
+
+meaningDecodage : Decoder Meaning
+meaningDecodage =
+    map2 Meaning
+        (field "partOfSpeech" string)
+        (field "definitions" (Json.Decode.list (field "definition" string)))
 
 
 -- SUBSCRIPTIONS
@@ -123,15 +160,17 @@ view : Model -> Html Msg
 view model =
     if model.text == "Error" then
         div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file."]
+    else if model.def == [] then
+      div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the definition."]
     else 
         div [style "font-family" "Noto Sans, sans-serif"]
             [ viewShowAnswer model
-            , div [style "font-size" "20px"] [text "Guess the word according to its definition :"]
+            , div [style "font-size" "20px"] [text "Guess the word according to its definition : \n"]
+            , pre [] (recur1 model.def)
             , input [ placeholder "Type a word", value model.userInput, onInput Change ] []
             , button [ onClick Erase ] [ text "Erase" ]
             , button [ onClick Check ] [ text "Show the answer" ]
             , viewValidation model
-            --h1 [] [ text model.answer ]
             ]
 
 
@@ -152,17 +191,23 @@ viewValidation model =
     else
         div [ ] [ text "" ]
 
--- HTTP
 
-getDefinition : Cmd Msg
-getDefinition =
-  Http.get
-    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ model.answer
-    , expect = Http.expectJson GotDef defDecoder
-    }
+recur1 : List Def -> List (Html Msg)
+recur1  list =
+    case list of 
+        [] -> []
+        (x :: xs) -> [ text (x.word ++ "\n") ] ++ recur2(x.meanings) ++ recur1(xs)
 
-defDecoder : Decoder Def
-defDecoder =
-    decodeString Def (at ["meanings","definitions","definition"] string) 
-    -- decodeString (at ["meanings","partOfSpeech"] string)
-    -- decodeString (at ["word"] string)
+
+recur2 : List Meaning -> List (Html Msg)
+recur2  list =
+    case list of 
+        [] -> []
+        (x :: xs) -> [ text ("  " ++ x.partOfSpeech ++ "\n") ] ++ recur3(x.definitions) ++ recur2(xs)
+
+
+recur3 : List String -> List (Html Msg)
+recur3  list =
+    case list of 
+        [] -> []
+        (x :: xs) -> [text ("       - " ++ x ++ "\n")] ++ recur3(xs)
