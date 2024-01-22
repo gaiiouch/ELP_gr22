@@ -7,9 +7,9 @@ module Affichage exposing (..)
 --
 
 import Browser
-import Html exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes exposing (..)
+import Html exposing (Html, text, pre, div, input, button)
+import Html.Events exposing (onInput, onClick)
+import Html.Attributes exposing (placeholder, value, style)
 import Http
 import Random
 import List.Extra exposing (getAt)
@@ -67,9 +67,8 @@ init _ =
 
 type Msg
   = GotText (Result Http.Error String)
-  | GotWord (Result Http.Error String)
-  | GotDef (Result Http.Error (List Def))
   | NewWord Int
+  | GotDef (Result Http.Error (List Def))
   | Change String
   | Erase
   | Check
@@ -85,15 +84,8 @@ update msg model =
 
         Err _ ->
           ({ model | text = "Error" }, Cmd.none)
-
-    GotWord result ->
-      case result of
-        Ok fullText ->
-          ({ model | text = fullText }, Random.generate NewWord (Random.int 0 (List.length (String.split " " fullText))))
-
-        Err _ ->
-          ({ model | text = "Error" }, Cmd.none)
     
+   
     GotDef result ->
       case result of
         Ok definition ->
@@ -121,6 +113,7 @@ update msg model =
         ({ model | isChecked = not model.isChecked }, Cmd.none)
 
 
+
 getRandomString : List String -> Int -> String
 getRandomString list x =
     case (getAt x list) of
@@ -136,19 +129,21 @@ getWord word =
 
 defDecoder : Decoder (List Def)
 defDecoder =
-    Json.Decode.list listDecodage
+    list listDecodage
+
 
 listDecodage : Decoder Def
 listDecodage =
     map2 Def
         (field "word" string)
-        (field "meanings" (Json.Decode.list meaningDecodage))
+        (field "meanings" (list meaningDecodage))
+
 
 meaningDecodage : Decoder Meaning
 meaningDecodage =
     map2 Meaning
         (field "partOfSpeech" string)
-        (field "definitions" (Json.Decode.list (field "definition" string)))
+        (field "definitions" (list (field "definition" string)))
 
 
 -- SUBSCRIPTIONS
@@ -159,7 +154,6 @@ subscriptions model =
   Sub.none
 
 
-
 -- VIEW
 
 
@@ -168,12 +162,12 @@ view model =
     if model.text == "Error" then
         div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file."]
     else if model.def == [] then
-      div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the definition."]
+      div [style "font-family" "Noto Sans, sans-serif"] [text ("I was unable to load the definition of the word " ++ model.answer)]
     else 
         div [style "font-family" "Noto Sans, sans-serif"]
             [ viewShowAnswer model
             , div [style "font-size" "20px"] [text "Guess the word according to its definition : \n"]
-            , pre [] (recur1 model.def)
+            , pre [style "font-family" "Noto Sans, sans-serif"] (recur1 model.def)
             , input [ placeholder "Type a word", value model.userInput, onInput Change ] []
             , button [ onClick Erase ] [ text "Erase" ]
             , button [ onClick Check ] [ text "Show the answer" ]
@@ -196,14 +190,14 @@ viewValidation model =
     else if String.length model.userInput > 0 then
         div [ style "color" "red" ] [ text ("Wrong answer ! The word is not " ++ model.userInput ++ ".") ]
     else
-        div [ ] [ text "" ]
+        div [] [ text "" ]
 
 
 recur1 : List Def -> List (Html Msg)
-recur1  list =
+recur1 list =
     case list of 
         [] -> []
-        (x :: xs) -> [ text (x.word ++ "\n") ] ++ recur2(x.meanings) ++ recur1(xs)
+        (x :: xs) -> [ text ("Meaning :\n") ] ++ recur2(x.meanings) ++ recur1(xs)
 
 
 recur2 : List Meaning -> List (Html Msg)

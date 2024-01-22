@@ -9,7 +9,7 @@ import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (..)
 import Http
-import Json.Decode exposing (Decoder, map2, field, int, string, list)
+import Json.Decode exposing (Decoder, map2, field, string, list)
 
 
 
@@ -110,7 +110,7 @@ viewQuote model =
         [ text "Loading..."    ]
 
     Success lst ->
-        pre [] 
+        pre [style "font-family" "Noto Sans, sans-serif"] 
           (recur1 lst)
 
 
@@ -118,7 +118,7 @@ recur1 : List Def -> List (Html Msg)
 recur1  list =
     case list of 
         [] -> []
-        (x :: xs) -> [ text (x.word ++ "\n") ] ++ recur2(x.meanings) ++ recur1(xs)
+        (x :: xs) -> [ text ("Meaning :\n") ] ++ recur2(x.meanings) ++ recur1(xs)
 
 recur2 : List Meaning -> List (Html Msg)
 recur2  list =
@@ -155,7 +155,7 @@ meaningDecodage =
 getWord : Cmd Msg
 getWord =
   Http.get
-    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/wife"
+    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
     , expect = Http.expectJson GotQuote defDecoder
     }
 
