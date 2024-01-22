@@ -6510,29 +6510,6 @@ var $author$project$Affichage$update = F2(
 							{text: 'Error'}),
 						$elm$core$Platform$Cmd$none);
 				}
-			case 'GotWord':
-				var result = msg.a;
-				if (result.$ === 'Ok') {
-					var fullText = result.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{text: fullText}),
-						A2(
-							$elm$random$Random$generate,
-							$author$project$Affichage$NewWord,
-							A2(
-								$elm$random$Random$int,
-								0,
-								$elm$core$List$length(
-									A2($elm$core$String$split, ' ', fullText)))));
-				} else {
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{text: 'Error'}),
-						$elm$core$Platform$Cmd$none);
-				}
 			case 'GotDef':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
@@ -6689,7 +6666,7 @@ var $author$project$Affichage$recur1 = function (list) {
 		return _Utils_ap(
 			_List_fromArray(
 				[
-					$elm$html$Html$text(x.word + '\n')
+					$elm$html$Html$text('Meaning :\n')
 				]),
 			_Utils_ap(
 				$author$project$Affichage$recur2(x.meanings),
@@ -6767,7 +6744,7 @@ var $author$project$Affichage$view = function (model) {
 			]),
 		_List_fromArray(
 			[
-				$elm$html$Html$text('I was unable to load the definition.')
+				$elm$html$Html$text('I was unable to load the definition of the word ' + model.answer)
 			])) : A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -6789,7 +6766,10 @@ var $author$project$Affichage$view = function (model) {
 					])),
 				A2(
 				$elm$html$Html$pre,
-				_List_Nil,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'font-family', 'Noto Sans, sans-serif')
+					]),
 				$author$project$Affichage$recur1(model.def)),
 				A2(
 				$elm$html$Html$input,
