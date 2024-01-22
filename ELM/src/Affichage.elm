@@ -14,6 +14,8 @@ import Http
 import Random
 import List.Extra exposing (getAt)
 import Json.Decode exposing (Decoder, map2, field, string, list)
+import Json.Decode exposing (Error(..))
+import Definitions exposing (Model(..))
 
 
 -- MAIN
@@ -38,7 +40,15 @@ type alias Model =
   , text : String
   , isChecked : Bool
   , def : List Def
+  , state : State
   }
+
+
+type State =
+   FailureText
+  | FailureDef
+  | Loading
+  | Success
 
 
 type alias Def =
@@ -55,7 +65,7 @@ type alias Meaning =
 
 init : () -> ((Model, Cmd Msg))
 init _ =
-  ( Model "" "" "" False []
+  ( Model "" "" "" False [] Loading
   , Http.get
       { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/main/ELM/thousand_words_things_explainer.txt"
       , expect = Http.expectString GotText
@@ -84,22 +94,22 @@ update msg model =
           ({ model | text = fullText }, Random.generate NewWord (Random.int 0 (List.length (String.split " " fullText))))
 
         Err _ ->
-          ({ model | text = "Error" }, Cmd.none)
+          ({ model | state = FailureText }, Cmd.none)
     
     NewWord number ->
       let
         newWord = getRandomString (String.split " " model.text) number
-        newModel = { model | answer = newWord, userInput = "", isChecked = False }
+        newModel = { model | answer = newWord }
       in
       (newModel, getWord newWord)
    
     GotDef result ->
       case result of
         Ok definition ->
-          ({model | def = definition }, Cmd.none)
+          ({model | def = definition, state = Success }, Cmd.none)
 
         Err _ ->
-          ({model | def = []}, Cmd.none)
+          ({model | state = FailureDef }, Cmd.none)
 
     Change newInput -> ({ model | userInput = newInput }, Cmd.none)
     
@@ -157,12 +167,15 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    if model.text == "Error" then
-        div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file."]
-    else if model.def == [] then
-      div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the definition of the word"]
-    else 
-        div [style "font-family" "Noto Sans, sans-serif"]
+  case model.state of
+    Loading ->
+      div [style "font-family" "Noto Sans, sans-serif"] [text "Loading..."]
+    FailureText ->
+      div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file."]
+    FailureDef ->
+      div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the definition of the word."]
+    Success -> 
+      div [style "font-family" "Noto Sans, sans-serif"]
             [ viewShowAnswer model
             , div [style "font-size" "20px"] [text "Guess the word according to its definition : \n"]
             , pre [style "font-family" "Noto Sans, sans-serif"] (recur1 model.def)
