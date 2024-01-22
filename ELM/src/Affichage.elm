@@ -13,6 +13,7 @@ import Html.Attributes exposing (..)
 import Http
 import Random
 import List.Extra exposing (getAt)
+import Json.Decode exposing (Decoder, field, int, string, at, decodeString)
 
 
 
@@ -38,6 +39,12 @@ type alias Model =
   , isChecked : Bool
   }
 
+type alias Def =
+  { word : String
+  -- , partOfSpeech : String
+  -- , def : String
+  }
+
 
 init : () -> ((Model, Cmd Msg))
 init _ =
@@ -55,6 +62,7 @@ init _ =
 
 type Msg
   = GotText (Result Http.Error String)
+  | GotDef (Result Http.Error String)
   | NewWord Int
   | Change String
   | Erase
@@ -65,6 +73,14 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     GotText result ->
+      case result of
+        Ok fullText ->
+          ({ model | text = fullText }, Random.generate NewWord (Random.int 0 (List.length (String.split " " fullText))))
+
+        Err _ ->
+          ({ model | text = "Error" }, Cmd.none)
+
+    GotDef result ->
       case result of
         Ok fullText ->
           ({ model | text = fullText }, Random.generate NewWord (Random.int 0 (List.length (String.split " " fullText))))
@@ -135,3 +151,18 @@ viewValidation model =
         div [ style "color" "red" ] [ text ("Wrong answer ! The word is not " ++ model.userInput ++ ".") ]
     else
         div [ ] [ text "" ]
+
+-- HTTP
+
+getDefinition : Cmd Msg
+getDefinition =
+  Http.get
+    { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ model.answer
+    , expect = Http.expectJson GotDef defDecoder
+    }
+
+defDecoder : Decoder Def
+defDecoder =
+    decodeString Def (at ["meanings","definitions","definition"] string) 
+    -- decodeString (at ["meanings","partOfSpeech"] string)
+    -- decodeString (at ["word"] string)
