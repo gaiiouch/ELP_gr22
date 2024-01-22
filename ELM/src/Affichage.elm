@@ -85,6 +85,12 @@ update msg model =
         Err _ ->
           ({ model | text = "Error" }, Cmd.none)
     
+    NewWord number ->
+      let
+        newWord = getRandomString (String.split " " model.text) number
+        newModel = { model | answer = newWord, userInput = "", isChecked = False }
+      in
+      (newModel, getWord newWord)
    
     GotDef result ->
       case result of
@@ -93,16 +99,6 @@ update msg model =
 
         Err _ ->
           ({model | def = []}, Cmd.none)
-      
-  --  NewWord number ->
-    --    ({ model | answer = (getRandomString (String.split " " model.text) number) }, getWord model.answer)
-    
-    NewWord number ->
-      let
-        newWord = getRandomString (String.split " " model.text) number
-        newModel = { model | answer = newWord, userInput = "", isChecked = False }
-      in
-      (newModel, getWord newWord)
 
     Change newInput -> ({ model | userInput = newInput }, Cmd.none)
     
@@ -124,7 +120,7 @@ getWord : String -> Cmd Msg
 getWord word =
   Http.get
     { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ word 
-    , expect = Http.expectJson GotDef  defDecoder
+    , expect = Http.expectJson GotDef defDecoder
     }
 
 defDecoder : Decoder (List Def)
@@ -162,7 +158,7 @@ view model =
     if model.text == "Error" then
         div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the text file."]
     else if model.def == [] then
-      div [style "font-family" "Noto Sans, sans-serif"] [text ("I was unable to load the definition of the word " ++ model.answer)]
+      div [style "font-family" "Noto Sans, sans-serif"] [text "I was unable to load the definition of the word"]
     else 
         div [style "font-family" "Noto Sans, sans-serif"]
             [ viewShowAnswer model
@@ -189,6 +185,8 @@ viewValidation model =
         div [ style "color" "green" ] [ text ("Correct answer ! The word was indeed " ++ model.answer ++ " !") ]
     else if String.length model.userInput > 0 then
         div [ style "color" "red" ] [ text ("Wrong answer ! The word is not " ++ model.userInput ++ ".") ]
+    else if model.isChecked == True then
+        div [ style "color" "black" ] [ text ("The right answer was " ++ model.answer ++ ".") ]
     else
         div [] [ text "" ]
 
