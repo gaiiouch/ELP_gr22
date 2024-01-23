@@ -64,16 +64,11 @@ type alias Meaning =
 init : () -> ((Model, Cmd Msg))
 init _ =
   ( Model "" "" "" False [] Loading
-  , getText
-  )
-
-
-getText : Cmd Msg
-getText =
-  Http.get
+  , Http.get
       { url = "https://raw.githubusercontent.com/gaiiouch/ELP_gr22/main/ELM/thousand_words_things_explainer.txt"
       , expect = Http.expectString GotText
       }
+  )
 
 
 -- UPDATE
