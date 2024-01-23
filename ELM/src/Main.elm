@@ -86,6 +86,7 @@ type Msg
   | Change String
   | Erase
   | Check
+  | New 
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -121,6 +122,9 @@ update msg model =
     
     Check -> 
         ({ model | isChecked = not model.isChecked }, Cmd.none)
+
+    New -> init ()
+    
 
 
 getRandomString : List String -> Int -> String
@@ -185,6 +189,7 @@ view model =
             , input [ placeholder "Type a word", value model.userInput, onInput Change ] []
             , button [ onClick Erase ] [ text "Erase" ]
             , button [ onClick Check ] [ text "Show the answer" ]
+            , button [ onClick New ] [ text "New Definition !" ]
             , viewValidation model
             ]
 
