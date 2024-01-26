@@ -1,6 +1,9 @@
 import random from 'random'
+import inquirer from 'inquirer'
 
-//initialisation du jeu
+//github de la pizza : https://github.com/SBoudrias/Inquirer.js/tree/master/packages/inquirer/examples
+
+//INITIALISATION DU JEU
 
 // 14 A, 4 B, 7 C, 5 D, 19 E, 2 F, 4 G, 2 H, 11 I, 1 J, 1 K, 6 L, 5 M, 9 N, 8 O, 4 P, 1 Q, 10 R, 7 S, 9 T, 8 U, 2 V, 1 W, 1 X, 1 Y et 2 Z.
 let sac =  [["A", 14],["B", 4],["C", 7],["D", 5],["E", 19],["F", 2],["G", 4],["H", 2],["I", 11],["J", 1],["K", 1],["L", 6],["M", 5],["N" , 9],["O" , 8],["P" , 4],["Q" , 1],["R" , 10],["S", 7],["T", 9],["U", 8],["V", 2],["W" , 1],["X" , 1],["Y" , 1],["Z", 2]]
@@ -15,7 +18,7 @@ let main2 = []
 let alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
 
-//fonctions du jeu
+//FONCTIONS DU JEU
 const piocher_x_lettres = function(x, sac) {
     let i = 0
     let new_lettres = []
@@ -44,8 +47,7 @@ const poser_lettre = function(lettre, tapis, ligne, place_dans_la_ligne) {
 } 
 
 
-//début du jeu
-
+//DEBUT DU JEU
 let lettres_piochees = piocher_x_lettres(6, sac)
 console.log(lettres_piochees)
 
@@ -54,6 +56,47 @@ affiche_tapis(tapis1)
 console.log("tapis joueur 2 :")
 affiche_tapis(tapis2)
 
+const questions = [
+    {
+        type : 'list',
+        name : 'lign',
+        message : 'On which lign to you want to make changes ?',
+        choices: ['A','B','C'], //les choix sont les lignes déjà existante ou écrire une nouvelle ligne
+        filter(val) {
+            return val.toLowerCase();
+            // on récupère le numéro de ligne pour mettre à jour les choix de la question d'après
+        },
+    },
+    {
+        type : 'list',
+        name : 'letters',
+        message : 'Write your word letter per letter :',
+        choices: ['A','B','C'], //main du joueur + lettres déjà sur la ligne
+        filter(val) {
+            //il faut une boucle while sur ces choix, CA VA ÊTRE COMPLIQUE JE PENSE
+            //et les lettres déjà posées sont enlevées de la liste choices
+            return val.toLowerCase();
+        },
+    },
+//je pense pas qu'on ait besoin d'un autre choix multiple pour l'instant
+/*    {
+        type: 'input',
+        name: 'quantity',
+        message: 'How many do you need?',
+        validate(value) {
+          const valid = !isNaN(parseFloat(value));
+          return valid || 'Please enter a number';
+        },
+        filter: Number,
+    },*/
+];
+
+inquirer.prompt(questions).then((answers) => {
+    // récapitulation de la réponse donnée par le joueur et on l'affiche,
+    // mise à jour du tapis et de la main du joueur
+    console.log('\nOrder receipt:');
+    console.log(JSON.stringify(answers, null, '  '));
+  });
 
 
 
