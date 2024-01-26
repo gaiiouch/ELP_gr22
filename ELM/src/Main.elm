@@ -7,9 +7,9 @@ module Main exposing (..)
 
 
 import Browser
-import Html exposing (Html, text, blockquote, pre, div, input, button)
+import Html exposing (Html, text, blockquote, pre, div, h1, input, button, label)
 import Html.Events exposing (onInput, onClick)
-import Html.Attributes exposing (placeholder, value, style)
+import Html.Attributes exposing (placeholder, value, style, type_)
 import Http
 import Random
 import List.Extra exposing (getAt)
@@ -183,8 +183,8 @@ view model =
             , pre [style "font-family" "Noto Sans, sans-serif", style "font-size" "15px"] (recur1 model.def)
             , input [ placeholder "Type a word", value model.userInput, onInput Change ] []
             , button [ onClick Erase ] [ text "Erase" ]
-            , button [ onClick Check ] [ text "Show the answer" ]
             , button [ onClick New ] [ text "New Definition !" ]
+            , div [] [ label [] [ input [type_ "checkbox", onClick Check] [], text "Show the answer"]]
             , viewValidation model
             ]
 
@@ -192,9 +192,9 @@ view model =
 viewShowAnswer : Model -> Html msg
 viewShowAnswer model =
     if model.userInput == model.answer || model.isChecked == True then
-        div [style "font-size" "50px", style "font-weight" "bold"] [text model.answer]
+        h1 [style "font-size" "50px", style "font-weight" "bold"] [text model.answer]
     else
-        div [style "font-size" "50px", style "font-weight" "bold"] [text "Guess it !"]
+        h1 [style "font-size" "50px", style "font-weight" "bold"] [text "Guess it !"]
 
 
 viewValidation : Model -> Html msg
