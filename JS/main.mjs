@@ -59,11 +59,10 @@ const list_choix1 = function (tapis) {
 let choice1 = list_choix1(tapis1)
 
 let lettres_piochees = piocher_x_lettres(6, sac)
-console.log(lettres_piochees)
+lettres_piochees.push("end word")
 
 
-
-const questions = [
+const question_lign = [
     {
         type : 'list',
         name : 'lign',
@@ -74,9 +73,12 @@ const questions = [
             // on récupère le numéro de ligne pour mettre à jour les choix de la question d'après
         },
     },
+];
+
+const question_letter = [
     {
         type : 'list',
-        name : 'letters',
+        name : 'letter',
         message : 'Write your word letter per letter :',
         choices: lettres_piochees, //main du joueur + lettres déjà sur la ligne
         filter(val) {
@@ -85,66 +87,67 @@ const questions = [
             return val;
         },
     },
-//je pense pas qu'on ait besoin d'un autre choix multiple pour l'instant
-/*    {
-        type: 'input',
-        name: 'quantity',
-        message: 'How many do you need?',
-        validate(value) {
-        const valid = !isNaN(parseFloat(value));
-        return valid || 'Please enter a number';
-        },
-        filter: Number,
-    },*/
 ];
 
 //DEBUT DU JEU
 
-
-
-/*
-function* game() {
-    inquirer.prompt(questions).then((answers) => {
-        // récapitulation de la réponse donnée par le joueur et on l'affiche,
-        // mise à jour du tapis et de la main du joueur
-        console.log('\nOrder receipt:');
-        console.log(JSON.stringify(answers, null, '  '));
-        
-    });
-    yield ;
-}
-*/
-// inquirer.prompt(questions)
-
-affiche_tapis(tapis1, 1)
-affiche_tapis(tapis2, 2)
-/*
-for (let j = 0 ; j < 2 ; j ++){
-    for (let i of game()) {
-
-    }
-}
-*/
 const playGame = async () => {
     let end = false;
     let i = 0;
 
     while (!end) {
+        console.log(lettres_piochees)
         affiche_tapis(tapis1, 1);
         affiche_tapis(tapis2, 2);
 
         // Use await to wait for player input before moving on
-        await inquirer.prompt(questions).then((answers) => {
+        let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
             // récapitulation de la réponse donnée par le joueur et on l'affiche,
             // mise à jour du tapis et de la main du joueur
-            console.log('\nOrder receipt:');
+            console.log('\nLign number');
             console.log(JSON.stringify(answers, null, '  '));
+            let chosen_lign = answers["lign"]
+            return chosen_lign
         });
 
-        if (i === 2) {
+
+        let end_word = false
+        while (!end_word) {
+            await inquirer.prompt(question_letter).then((answers) => {
+                // récapitulation de la réponse donnée par le joueur et on l'affiche,
+                // mise à jour du tapis et de la main du joueur
+                console.log('\nTurn summary:');
+                console.log(JSON.stringify(answers, null, '  '));
+                
+                if (answers['letter'] != "end word") {
+                    if (chosen_lign != "new lign") {
+                        poser_lettre(answers["letter"], tapis1, chosen_lign-1, 0); 
+                    } else {
+                        tapis1.push([]);
+                        poser_lettre(answers["letter"], tapis1, tapis1.length-1, 0);
+                    }
+                }
+
+                if (answers["letter"] === "end word") {
+                    end_word = true  
+                } else {
+                    let index = lettres_piochees.indexOf(answers['letter']);
+                    if (index !== -1) {
+                        lettres_piochees.splice(index, 1);
+                    }
+                }
+            });
+            
+        }
+
+            
+
+        i++;
+
+        if (i == 2) {
             end = true;
         }
-        i++;
+        
     }
 };
 
