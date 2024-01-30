@@ -21,7 +21,13 @@ Il faut lancer le serveur avant le client.
 
 ## Projet ELM
 
-à venir ...
+Pour télécharger ELM en fonction de son OS : https://guide.elm-lang.org/install/elm.html
+
+Packages à télécharger pour le bon fonctionnement du code avec elm install :
+- elm/http
+- elm/json
+- elm/random
+- elm-community/list-extra
 
 ## Projet JavaScript
 
