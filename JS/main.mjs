@@ -39,7 +39,7 @@ const affiche_tapis = function(tapis, num_joueur) {
 }
 
 //splice(start, deleteCount, item1, item2, /* …, */ itemN)
-
+/*
 const poser_lettre = function(lettre, tapis, ligne, place_dans_la_ligne) {
     tapis[ligne].splice(place_dans_la_ligne, 0, lettre)
 } 
@@ -52,7 +52,7 @@ const list_choix1 = function (tapis) {
     choice1.push("new lign")
     return choice1
 }
-
+*/
 //let choice1 = list_choix1(tapis1)
 
 let main1 = piocher_x_lettres(6, sac)
@@ -88,13 +88,29 @@ const playGame = async () => {
                 type : 'list',
                 name : 'lign',
                 message : 'On which lign do you want to make changes ?',
-                choices: Array.from({ length: tapis.length + 1 }, (_, index) => index + 1), //les choix sont les lignes déjà existante ou écrire une nouvelle ligne
+                choices: Array.from({ length: tapis.length + 1 }, (_, index) => index + 1), //les choix sont les lignes déjà existantes ou écrire une nouvelle ligne
                 lign_choice(val) {
                     return val;
                     // on récupère le numéro de ligne pour mettre à jour les choix de la question d'après
                 },
             },
         ];
+        
+
+        // Use await to wait for player input before moving on
+        let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
+            // récapitulation de la réponse donnée par le joueur et on l'affiche,
+            // mise à jour du tapis et de la main du joueur
+            console.log('\nLign number');
+            console.log(JSON.stringify(answers, null, '  '));
+            let chosen_lign = answers["lign"]
+            return chosen_lign
+        });
+
+        if (chosen_lign-1 < tapis.length) {
+            main = main.concat(tapis[chosen_lign-1])
+            tapis[chosen_lign-1] = []
+        }
         
         let question_letter = [
             {
@@ -109,17 +125,8 @@ const playGame = async () => {
                 },
             },
         ];
-
-        // Use await to wait for player input before moving on
-        let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
-            // récapitulation de la réponse donnée par le joueur et on l'affiche,
-            // mise à jour du tapis et de la main du joueur
-            console.log('\nLign number');
-            console.log(JSON.stringify(answers, null, '  '));
-            let chosen_lign = answers["lign"]
-            return chosen_lign
-        });
-
+        
+        console.log(main)
         let end_word = false
         let letters = []
         while (!end_word) {
