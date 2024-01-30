@@ -32,8 +32,9 @@ const piocher_x_lettres = function(x, sac) {
     return new_lettres
 }
 
-const affiche_tapis = function(tapis) {
+const affiche_tapis = function(tapis, num_joueur) {
     let l = 0
+    console.log("tapis joueur " + num_joueur + " :")
     while (l < tapis.length) {
         console.log(tapis[l])
         l += 1
@@ -46,24 +47,30 @@ const poser_lettre = function(lettre, tapis, ligne, place_dans_la_ligne) {
     tapis[ligne].splice(place_dans_la_ligne, 0, lettre)
 } 
 
+const list_choix1 = function (tapis) {
+    let choice1 = []
+    for (let p = 0; p < tapis.length; p++) {
+        choice1.push(p+1)
+    }
+    choice1.push("new lign")
+    return choice1
+}
 
-//DEBUT DU JEU
+let choice1 = list_choix1(tapis1)
+
 let lettres_piochees = piocher_x_lettres(6, sac)
 console.log(lettres_piochees)
 
-console.log("tapis joueur 1 :")
-affiche_tapis(tapis1)
-console.log("tapis joueur 2 :")
-affiche_tapis(tapis2)
+
 
 const questions = [
     {
         type : 'list',
         name : 'lign',
-        message : 'On which lign to you want to make changes ?',
-        choices: ['A','B','C'], //les choix sont les lignes déjà existante ou écrire une nouvelle ligne
-        filter(val) {
-            return val.toLowerCase();
+        message : 'On which lign do you want to make changes ?',
+        choices: choice1, //les choix sont les lignes déjà existante ou écrire une nouvelle ligne
+        lign_choice(val) {
+            return val;
             // on récupère le numéro de ligne pour mettre à jour les choix de la question d'après
         },
     },
@@ -71,11 +78,11 @@ const questions = [
         type : 'list',
         name : 'letters',
         message : 'Write your word letter per letter :',
-        choices: ['A','B','C'], //main du joueur + lettres déjà sur la ligne
+        choices: lettres_piochees, //main du joueur + lettres déjà sur la ligne
         filter(val) {
             //il faut une boucle while sur ces choix, CA VA ÊTRE COMPLIQUE JE PENSE
             //et les lettres déjà posées sont enlevées de la liste choices
-            return val.toLowerCase();
+            return val;
         },
     },
 //je pense pas qu'on ait besoin d'un autre choix multiple pour l'instant
@@ -84,19 +91,34 @@ const questions = [
         name: 'quantity',
         message: 'How many do you need?',
         validate(value) {
-          const valid = !isNaN(parseFloat(value));
-          return valid || 'Please enter a number';
+        const valid = !isNaN(parseFloat(value));
+        return valid || 'Please enter a number';
         },
         filter: Number,
     },*/
 ];
 
-inquirer.prompt(questions).then((answers) => {
-    // récapitulation de la réponse donnée par le joueur et on l'affiche,
-    // mise à jour du tapis et de la main du joueur
-    console.log('\nOrder receipt:');
-    console.log(JSON.stringify(answers, null, '  '));
-  });
+//DEBUT DU JEU
 
 
+let end = false
 
+function* game() {
+    inquirer.prompt(questions).then((answers) => {
+        // récapitulation de la réponse donnée par le joueur et on l'affiche,
+        // mise à jour du tapis et de la main du joueur
+        console.log('\nOrder receipt:');
+        console.log(JSON.stringify(answers, null, '  '));
+        
+    });
+    yield ;
+}
+
+affiche_tapis(tapis1, 1)
+affiche_tapis(tapis2, 2)
+
+for (let j = 0 ; j < 2 ; j ++){
+    for (let i of game()) {
+
+    }
+}
