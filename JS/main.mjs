@@ -110,38 +110,39 @@ const playGame = async () => {
             return chosen_lign
         });
 
-
         let end_word = false
+        let letters = []
         while (!end_word) {
-            await inquirer.prompt(question_letter).then((answers) => {
+            letters = await inquirer.prompt(question_letter).then((answers) => {
                 // récapitulation de la réponse donnée par le joueur et on l'affiche,
                 // mise à jour du tapis et de la main du joueur
                 console.log('\nTurn summary:');
                 console.log(JSON.stringify(answers, null, '  '));
-                
-                if (answers['letter'] != "end word") {
-                    if (chosen_lign != "new lign") {
-                        poser_lettre(answers["letter"], tapis1, chosen_lign-1, 0); 
-                    } else {
-                        tapis1.push([]);
-                        poser_lettre(answers["letter"], tapis1, tapis1.length-1, 0);
-                    }
-                }
 
                 if (answers["letter"] === "end word") {
                     end_word = true  
                 } else {
+                    letters.push(answers['letter'])
                     let index = lettres_piochees.indexOf(answers['letter']);
                     if (index !== -1) {
                         lettres_piochees.splice(index, 1);
                     }
                 }
+                return letters
             });
             
         }
 
-            
+        if (chosen_lign === "new lign") {
+            tapis1.push([]);
+            chosen_lign = tapis1.length
+        }
 
+        for (let i = 0; i < letters.length; i++){
+            //poser_lettre(letters[i], tapis1, chosen_lign-1, tapis1[chosen_lign-1].length - 1); 
+            tapis1[chosen_lign-1].push(letters[i])
+        }
+            
         i++;
 
         if (i == 2) {
