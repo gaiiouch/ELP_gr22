@@ -21,7 +21,16 @@ Il faut lancer le serveur avant le client.
 
 ## Projet ELM
 
-à venir ...
+Pour télécharger ELM en fonction de son OS : https://guide.elm-lang.org/install/elm.html
+
+Packages à télécharger pour le bon fonctionnement du code avec elm install :
+- elm/http
+- elm/json
+- elm/random
+- elm-community/list-extra
+
+Le but de ce projet était de créer une page web qui affiche une définition d'un mot choisi aléatoirement dans une liste. L'utilisateur doit deviner ce mot grâce à la définition.
+En fonction de la réponse donnée par l'utilisateur dans la zone de réponse, la page affiche si le mot est correct ou non. En cas d'échec, l'utilisateur peut choisir d'afficher la réponse ou de changer la définition pour jouer avec un autre mot.
 
 ## Projet JavaScript
 
