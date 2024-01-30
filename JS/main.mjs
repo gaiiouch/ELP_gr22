@@ -101,8 +101,8 @@ const questions = [
 //DEBUT DU JEU
 
 
-let end = false
 
+/*
 function* game() {
     inquirer.prompt(questions).then((answers) => {
         // récapitulation de la réponse donnée par le joueur et on l'affiche,
@@ -113,12 +113,39 @@ function* game() {
     });
     yield ;
 }
+*/
+// inquirer.prompt(questions)
 
 affiche_tapis(tapis1, 1)
 affiche_tapis(tapis2, 2)
-
+/*
 for (let j = 0 ; j < 2 ; j ++){
     for (let i of game()) {
 
     }
 }
+*/
+const playGame = async () => {
+    let end = false;
+    let i = 0;
+
+    while (!end) {
+        affiche_tapis(tapis1, 1);
+        affiche_tapis(tapis2, 2);
+
+        // Use await to wait for player input before moving on
+        await inquirer.prompt(questions).then((answers) => {
+            // récapitulation de la réponse donnée par le joueur et on l'affiche,
+            // mise à jour du tapis et de la main du joueur
+            console.log('\nOrder receipt:');
+            console.log(JSON.stringify(answers, null, '  '));
+        });
+
+        if (i === 2) {
+            end = true;
+        }
+        i++;
+    }
+};
+
+playGame()
