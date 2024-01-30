@@ -11,9 +11,6 @@ let sac =  [["A", 14],["B", 4],["C", 7],["D", 5],["E", 19],["F", 2],["G", 4],["H
 let tapis1 = [["B","O","N"],["J","E","U","X"]]
 let tapis2 = [["H","E","L","L","O"]]
 
-let main1 = []
-let main2 = []
-
 //pas sûre que ce soit utile
 let alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
@@ -56,49 +53,62 @@ const list_choix1 = function (tapis) {
     return choice1
 }
 
-let choice1 = list_choix1(tapis1)
+//let choice1 = list_choix1(tapis1)
 
-let lettres_piochees = piocher_x_lettres(6, sac)
-lettres_piochees.push("end word")
-
-
-const question_lign = [
-    {
-        type : 'list',
-        name : 'lign',
-        message : 'On which lign do you want to make changes ?',
-        choices: choice1, //les choix sont les lignes déjà existante ou écrire une nouvelle ligne
-        lign_choice(val) {
-            return val;
-            // on récupère le numéro de ligne pour mettre à jour les choix de la question d'après
-        },
-    },
-];
-
-const question_letter = [
-    {
-        type : 'list',
-        name : 'letter',
-        message : 'Write your word letter per letter :',
-        choices: lettres_piochees, //main du joueur + lettres déjà sur la ligne
-        filter(val) {
-            //il faut une boucle while sur ces choix, CA VA ÊTRE COMPLIQUE JE PENSE
-            //et les lettres déjà posées sont enlevées de la liste choices
-            return val;
-        },
-    },
-];
+let main1 = piocher_x_lettres(6, sac)
+let main2 = piocher_x_lettres(6, sac)
+main1.push("end word")
+main2.push("end word")
 
 //DEBUT DU JEU
 
 const playGame = async () => {
     let end = false;
     let i = 0;
+    let tapis;
+    let main;
 
     while (!end) {
-        console.log(lettres_piochees)
+        if (i % 2 === 0){
+            tapis = tapis1
+            main = main1
+            console.log("Tour du joueur 1")
+        } else {
+            tapis = tapis2
+            main = main2
+            console.log("Tour du joueur 2")
+        }
+
+        console.log(main)
         affiche_tapis(tapis1, 1);
         affiche_tapis(tapis2, 2);
+
+        let question_lign = [
+            {
+                type : 'list',
+                name : 'lign',
+                message : 'On which lign do you want to make changes ?',
+                choices: Array.from({ length: tapis.length + 1 }, (_, index) => index + 1), //les choix sont les lignes déjà existante ou écrire une nouvelle ligne
+                lign_choice(val) {
+                    return val;
+                    // on récupère le numéro de ligne pour mettre à jour les choix de la question d'après
+                },
+            },
+        ];
+        
+        let question_letter = [
+            {
+                type : 'list',
+                name : 'letter',
+                message : 'Write your word letter per letter :',
+                choices: main, //main du joueur + lettres déjà sur la ligne
+                filter(val) {
+                    //il faut une boucle while sur ces choix, CA VA ÊTRE COMPLIQUE JE PENSE
+                    //et les lettres déjà posées sont enlevées de la liste choices
+                    return val;
+                },
+            },
+        ];
 
         // Use await to wait for player input before moving on
         let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
@@ -116,16 +126,16 @@ const playGame = async () => {
             letters = await inquirer.prompt(question_letter).then((answers) => {
                 // récapitulation de la réponse donnée par le joueur et on l'affiche,
                 // mise à jour du tapis et de la main du joueur
-                console.log('\nTurn summary:');
-                console.log(JSON.stringify(answers, null, '  '));
 
                 if (answers["letter"] === "end word") {
-                    end_word = true  
+                    end_word = true
+                    console.log('\nTurn summary:');
+                    console.log(JSON.stringify(letters, null, '  '));
                 } else {
                     letters.push(answers['letter'])
-                    let index = lettres_piochees.indexOf(answers['letter']);
+                    let index = main.indexOf(answers['letter']);
                     if (index !== -1) {
-                        lettres_piochees.splice(index, 1);
+                        main.splice(index, 1);
                     }
                 }
                 return letters
@@ -133,20 +143,33 @@ const playGame = async () => {
             
         }
 
-        if (chosen_lign === "new lign") {
-            tapis1.push([]);
-            chosen_lign = tapis1.length
+        if (chosen_lign === tapis.length+1) {
+            tapis.push([]);
         }
 
         for (let i = 0; i < letters.length; i++){
             //poser_lettre(letters[i], tapis1, chosen_lign-1, tapis1[chosen_lign-1].length - 1); 
-            tapis1[chosen_lign-1].push(letters[i])
+            tapis[chosen_lign-1].push(letters[i])
         }
+
+        main.pop()
+        main = main.concat(piocher_x_lettres(6-main.length, sac))
+        main.push("end word")
+        if (i % 2 === 0){
+            main1 = main
+            console.log("Fin du tour du joueur 1")
+        } else {
+            main2 = main
+            console.log("Fin du tour du joueur 2")
+        }
+
             
         i++;
 
-        if (i == 2) {
+        if (i == 4) {
             end = true;
+            affiche_tapis(tapis1, 1);
+            affiche_tapis(tapis2, 2);
         }
         
     }
