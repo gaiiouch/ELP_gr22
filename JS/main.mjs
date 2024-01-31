@@ -58,9 +58,10 @@ const playGame = async () => {
 
         console.log("Tour du joueur " + (tour % 2 + 1))
 
-        console.log("main du joueur 1")
+        console.log("--------------- PLATEAU ---------------")
+        console.log("> main du joueur 1")
         console.log(main1)
-        console.log("main du joueur 2")
+        console.log("> main du joueur 2")
         console.log(main2)
         affiche_tapis(tapis1, 1);
         affiche_tapis(tapis2, 2);
@@ -87,8 +88,8 @@ const playGame = async () => {
             let play_jarnac = await inquirer.prompt(jarnac).then((answers) => {
                 // récapitulation de la réponse donnée par le joueur et on l'affiche,
                 // mise à jour du tapis et de la main du joueur
-                console.log('\nPlaying Jarnac');
-                console.log(JSON.stringify(answers, null, '  '));
+                //console.log('\nPlaying Jarnac');
+                //console.log(JSON.stringify(answers, null, '  '));
                 let play_jarnac = answers["Jarnac"]
                 return play_jarnac
             });
@@ -104,7 +105,8 @@ const playGame = async () => {
                     console.log("Coup de Jarnac du joueur 2 sur le joueur 1 !")
                 }
 
-                console.log("main de l'autre joueur ")
+                console.log("--------------- JARNAC ---------------")
+                console.log(" > main de l'autre joueur ")
                 console.log(main)
                 affiche_tapis(tapis1, 1);
                 affiche_tapis(tapis2, 2);
@@ -124,8 +126,8 @@ const playGame = async () => {
                 let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
                     // récapitulation de la réponse donnée par le joueur et on l'affiche,
                     // mise à jour du tapis et de la main du joueur
-                    console.log('\nLign number');
-                    console.log(JSON.stringify(answers, null, '  '));
+                    //console.log('\nLign number');
+                    //console.log(JSON.stringify(answers, null, '  '));
                     let chosen_lign = answers["lign"]
                     return chosen_lign
                 });
@@ -157,8 +159,8 @@ const playGame = async () => {
 
                         if (answers["letter"] === "end word") {
                             end_word = true
-                            console.log('\nTurn summary:');
-                            console.log(JSON.stringify(letters, null, '  '));
+                            //console.log('\nTurn summary:');
+                            //console.log(JSON.stringify(letters, null, '  '));
                         } else {
                             letters.push(answers['letter'])
                             let index = main.indexOf(answers['letter']);
@@ -201,7 +203,8 @@ const playGame = async () => {
             main.push("end word")
         }
 
-        console.log("main du joueur")
+        console.log("--------------- TON TOUR ---------------")
+        console.log("> main du joueur")
         console.log(main)
         affiche_tapis(tapis1, 1);
         affiche_tapis(tapis2, 2);
@@ -222,14 +225,16 @@ const playGame = async () => {
         let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
             // récapitulation de la réponse donnée par le joueur et on l'affiche,
             // mise à jour du tapis et de la main du joueur
-            console.log('\nLign number');
-            console.log(JSON.stringify(answers, null, '  '));
+            //console.log('\nLign number');
+            //console.log(JSON.stringify(answers, null, '  '));
             let chosen_lign = answers["lign"]
             return chosen_lign
         });
 
         if (chosen_lign-1 < tapis.length) {
+            main.pop()
             main = main.concat(tapis[chosen_lign-1])
+            main.push("end word")
             tapis[chosen_lign-1] = []
         }
         
@@ -254,8 +259,8 @@ const playGame = async () => {
 
                 if (answers["letter"] === "end word") {
                     end_word = true
-                    console.log('\nTurn summary:');
-                    console.log(JSON.stringify(letters, null, '  '));
+                    //console.log('\nTurn summary:');
+                    //console.log(JSON.stringify(letters, null, '  '));
                 } else {
                     letters.push(answers['letter'])
                     let index = main.indexOf(answers['letter']);
@@ -277,6 +282,12 @@ const playGame = async () => {
             tapis[chosen_lign-1].push(letters[i])
         }
 
+        for (let i = 0; i < tapis.length; i++){
+            if (tapis[i].length === 0){
+                tapis.splice(i, 1)
+            }
+        }
+
         if (tour % 2 === 0){
             main1 = main
             console.log("Fin du tour du joueur " + (tour%2+1))
@@ -287,7 +298,7 @@ const playGame = async () => {
 
         tour ++
 
-        if (tour == 4) {
+        if (tapis.length === 8) {
             end = true;
             affiche_tapis(tapis1, 1);
             affiche_tapis(tapis2, 2);
@@ -296,4 +307,29 @@ const playGame = async () => {
     }
 };
 
-playGame()
+await playGame()
+
+const compte_pts = function (tapis) {
+    let pts = 0
+    for (let i = 0; i < tapis.length; i++){
+        pts += (tapis[i].length)*(tapis[i].length)
+    }
+    return pts
+}
+
+let j1_pts = compte_pts(tapis1)
+let j2_pts = compte_pts(tapis2)
+
+console.log("FIN DU JEU")
+if (j1_pts > j2_pts) {
+    console.log("Le joueur 1 a gagné avec un total de "+j1_pts+" points !")
+    console.log("Le joueur 2 a perdu avec un score de "+j2_pts+" points !")
+}
+if (j1_pts < j2_pts) {
+    console.log("Le joueur 2 a gagné avec un total de "+j2_pts+" points !")
+    console.log("Le joueur 1 a perdu avec un score de "+j1_pts+" points !")
+}
+
+if (j1_pts == j2_pts) {
+    console.log("Egalité entre les deux joueurs avec "+j1_pts+" points chacun !")
+}
