@@ -34,4 +34,8 @@ En fonction de la réponse donnée par l'utilisateur dans la zone de réponse, l
 
 ## Projet JavaScript
 
-à venir ...
+Pour lancer le code, il faut commencer par installer node JS, ainsi que des packages grâce aux commandes suivantes  :
+- npm install random
+- npm install inquirer
+
+Le but de ce projet était d'implémenter le jeu de société Jarnac.
