@@ -46,7 +46,7 @@ const playGame = async () => {
 
     while (!end) {
 
-        console.log("Tour du joueur " + (tour % 2 + 1))
+        console.log("\n << Tour du joueur " + (tour % 2 + 1)+" >>\n")
 
         console.log("--------------- PLATEAU ---------------")
         console.log("> main du joueur 1")
