@@ -4,8 +4,8 @@
       "start": "node main.js"
     },
     "dependencies": {
-      "random": "^1.0.0",
-      "requirer": "^1.0.0"
+      "random": "^4.1.0",
+      "inquirer": "^9.2.13"
     }
   }
   
