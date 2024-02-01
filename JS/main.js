@@ -23,11 +23,18 @@ const piocher_x_lettres = function(x, sac) {
 
 const affiche_tapis = function(tapis, num_joueur) {
     let l = 0
-    console.log("tapis joueur " + num_joueur + " :")
+    console.log("> tapis joueur " + num_joueur + " :")
     while (l < tapis.length) {
         console.log(tapis[l])
         l += 1
     }
+}
+
+const affiche_main = function(main, num_joueur) {
+    main.pop()
+    console.log("> main joueur " + num_joueur + " :")
+    console.log(main)
+    main.push("end word")
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -43,25 +50,20 @@ const playGame = async () => {
     let tour = 0;
     let tapis;
     let main;
+    let num;
 
     while (!end) {
 
         console.log("\n << Tour du joueur " + (tour % 2 + 1)+" >>\n")
 
         console.log("--------------- PLATEAU ---------------")
-        console.log("> main du joueur 1")
-        console.log(main1)
-        console.log("> main du joueur 2")
-        console.log(main2)
+        affiche_main(main1, 1)
+        affiche_main(main2, 2)
         affiche_tapis(tapis1, 1);
         affiche_tapis(tapis2, 2);
 
         // DEBUT TOUR
         if (tour > 0) {
-
-            console.log()
-
-
 
             let jarnac = [
                 {
@@ -84,18 +86,18 @@ const playGame = async () => {
                 if (tour % 2 == 0) {
                     tapis = tapis2
                     main = main2
+                    num = 2
                     console.log("Coup de Jarnac du joueur 1 sur le joueur 2 !")
                 } else {
                     tapis = tapis1
                     main = main1
+                    num = 1
                     console.log("Coup de Jarnac du joueur 2 sur le joueur 1 !")
                 }
 
                 console.log("--------------- JARNAC ---------------")
-                console.log(" > main de l'autre joueur ")
-                console.log(main)
-                affiche_tapis(tapis1, 1);
-                affiche_tapis(tapis2, 2);
+                affiche_main(main, num)
+                affiche_tapis(tapis, num);
 
                 let question_lign = [
                     {
@@ -117,7 +119,6 @@ const playGame = async () => {
                 main.pop()
                 main = main.concat(tapis[chosen_lign-1])
                 main.push("end word")
-                console.log(main)
                 tapis.splice(chosen_lign-1, 1)
 
                 let question_letter = [
@@ -138,8 +139,6 @@ const playGame = async () => {
                     letters = await inquirer.prompt(question_letter).then((answers) => {
                         if (answers["letter"] === "end word") {
                             end_word = true
-                            //console.log('\nTurn summary:');
-                            //console.log(JSON.stringify(letters, null, '  '));
                         } else {
                             letters.push(answers['letter'])
                             let index = main.indexOf(answers['letter']);
@@ -170,9 +169,11 @@ const playGame = async () => {
         if (tour % 2 == 0) {
             tapis = tapis1
             main = main1
+            num = 1
         } else {
             tapis = tapis2
             main = main2
+            num = 2
         }
 
         if (tour > 1) {
@@ -182,10 +183,8 @@ const playGame = async () => {
         }
 
         console.log("--------------- TON TOUR ---------------")
-        console.log("> main du joueur")
-        console.log(main)
-        affiche_tapis(tapis1, 1);
-        affiche_tapis(tapis2, 2);
+        affiche_main(main, num)
+        affiche_tapis(tapis, num);
 
         let question_lign = [
             {
