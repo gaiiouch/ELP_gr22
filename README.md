@@ -38,4 +38,4 @@ Pour lancer le code, il faut commencer par installer node JS, ainsi que des pack
 - npm install random
 - npm install inquirer
 
-Le but de ce projet était d'implémenter le jeu de société Jarnac. Notre version se lance et se joue directement dans le terminal avec la commande *node main.mjs* si vous êtes déjà dans le dossier JS.
+Le but de ce projet était d'implémenter le jeu de société Jarnac. Notre version se lance et se joue directement dans le terminal avec la commande *node main.js* si vous êtes déjà dans le dossier JS.
