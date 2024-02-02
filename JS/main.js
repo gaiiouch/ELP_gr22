@@ -1,4 +1,5 @@
 import random from 'random'
+import fs from 'fs'
 import { jarnac } from './jarnac.js'
 import { affiche_main, affiche_tapis } from './affichage.js'
 import { affiche_fin } from './fin.js'
@@ -21,7 +22,7 @@ const piocher_x_lettres = function(x, sac) {
     return new_lettres
 }
 
-const playGame = async (main1, main2, tapis1,tapis2) => {
+const playGame = async (main1, main2, tapis1,tapis2, mots) => {
     let end = false;
     let tour = 0;
     let tapis;
@@ -40,7 +41,35 @@ const playGame = async (main1, main2, tapis1,tapis2) => {
 
         // DEBUT TOUR
         if (tour > 0) {
-            await jarnac(tapis1, tapis2, main1, main2, tour)
+            if (tour % 2 == 0) {
+                tapis = tapis2
+                main = main2
+                num = 2
+            } else {
+                tapis = tapis1
+                main = main1
+                num = 1
+            }
+            let letters
+            tapis, main, letters = await jarnac(tapis, main, num, tour, mots)
+            //console.log(main)
+
+            if (tour % 2 == 0) {
+                tapis = tapis1
+            } else {
+                tapis = tapis2
+            }
+            
+            tapis.push([]);
+            for (let i = 0; i < letters.length; i++){
+                tapis[tapis.length-1].push(letters[i])
+            }
+
+            for (let i = 0; i < tapis.length; i++){
+                if (tapis[i].length === 0){
+                    tapis.splice(i, 1)
+                }
+            }
         }
 
         if (tour % 2 == 0) {
@@ -59,7 +88,7 @@ const playGame = async (main1, main2, tapis1,tapis2) => {
             main.push("fin du mot")
         }
 
-        await jouer_tour(tapis, main, num, tour)
+        main = await jouer_tour(tapis, main, num, mots)
 
         if (tour % 2 === 0){
             main1 = main
@@ -71,7 +100,7 @@ const playGame = async (main1, main2, tapis1,tapis2) => {
 
         tour ++
 
-        if (tapis1.length === 8 || tapis2.length === 8) {
+        if (tapis1.length === 2 || tapis2.length === 2) {
             end = true;
             affiche_tapis(tapis1, 1);
             affiche_tapis(tapis2, 2);
@@ -88,12 +117,32 @@ let sac =  [["A", 14],["B", 4],["C", 7],["D", 5],["E", 19],["F", 2],["G", 4],["H
 let tapis1 = []
 let tapis2 = []
 
+
+
 //DEBUT DU JEU
 let main1 = piocher_x_lettres(6, sac)
 let main2 = piocher_x_lettres(6, sac)
 main1.push("fin du mot")
 main2.push("fin du mot")
 
-await playGame(main1, main2, tapis1, tapis2)
 
-affiche_fin(tapis1,tapis2)
+const cheminFichier = './JS/liste_francais.txt';
+fs.readFile(cheminFichier, 'utf8', (err, data) => {
+    if (err) {
+        console.error('Erreur de lecture du fichier:', err);
+        return;
+    }
+
+    const mots = data.split(/\s+/);
+    for(let i = 0; i < mots.length; i++){
+        mots[i] = mots[i].toLowerCase()
+    }
+    const jeu = async () => {
+    await playGame(main1, main2, tapis1, tapis2, mots)
+    affiche_fin(tapis1,tapis2)
+    }
+    jeu()
+});
+
+
+
