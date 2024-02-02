@@ -43,23 +43,30 @@ export const jouer_tour = async (tapis, main, num, tour) => {
             },
         },
     ];
+    let word = false
+    let letters
 
-    let end_word = false
-    let letters = []
-    while (!end_word) {
-        letters = await inquirer.prompt(question_letter).then((answers) => {
-            if (answers["lettre"] === "fin du mot") {
-                end_word = true
-            } else {
-                letters.push(answers['lettre'])
-                let index = main.indexOf(answers['lettre']);
-                if (index !== -1) {
-                    main.splice(index, 1);
+    while(!word) {
+        let end_word = false
+        letters = []
+        while (!end_word) {
+            letters = await inquirer.prompt(question_letter).then((answers) => {
+                if (answers["lettre"] === "fin du mot") {
+                    end_word = true
+                } else {
+                    letters.push(answers['lettre'])
+                    let index = main.indexOf(answers['lettre']);
+                    if (index !== -1) {
+                        main.splice(index, 1);
+                    }
                 }
-            }
-            return letters
-        });
-        
+                return letters
+            });
+            
+        }
+
+        let mot = ((letters.toString()).replace(/,/g, '')).toLowerCase();
+        word = true
     }
 
     if (chosen_lign === tapis.length+1) {
