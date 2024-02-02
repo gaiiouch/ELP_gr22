@@ -1,21 +1,24 @@
 import fs from 'fs'
 
-// Utilisez le module fs pour manipuler les fichiers
-//const fs = require('fs');
+export const lecture_fichier = async()=>{
+    const cheminFichier = './liste_francais.txt';
 
-// Spécifiez le chemin du fichier à lire
-const cheminFichier = './JS/liste_francais.txt';
+    let mots = fs.readFile(cheminFichier, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Erreur de lecture du fichier:', err);
+            return;
+        }
 
-// Lisez le contenu du fichier de manière asynchrone
-fs.readFile(cheminFichier, 'utf8', (err, data) => {
-    if (err) {
-        console.error('Erreur de lecture du fichier:', err);
-        return;
-    }
+        const mots = data.split(/\s+/);
+        for(let i = 0; i < mots.length; i++){
+            mots[i] = mots[i].toLowerCase()
+        }
+        console.log(mots)
+        return mots        
+    });
+    return mots
+}
 
-    // Divisez le contenu en mots (séparés par des espaces)
-    const mots = data.split(/\s+/);
-    console.log(typeof mots)
-    // Affichez les mots
-    console.log('Mots dans le fichier:', mots);
-});
+let words 
+console.log(words =  await lecture_fichier())
+console.log("coucou")

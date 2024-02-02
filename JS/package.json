@@ -1,11 +1,11 @@
 {
     "type": "module",
     "scripts": {
-      "start": "node main.js"
+        "start": "node main.js"
     },
     "dependencies": {
-      "random": "^4.1.0",
-      "inquirer": "^9.2.13"
+        "fs": "^0.0.1-security",
+        "inquirer": "^9.2.13",
+        "random": "^4.1.0"
     }
-  }
-  
+}
