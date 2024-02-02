@@ -37,7 +37,7 @@ const affiche_main = function(main, num_joueur) {
     main.pop()
     console.log("> main joueur " + num_joueur + " :")
     console.log(main)
-    main.push("end word")
+    main.push("fin du mot")
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -45,8 +45,8 @@ const affiche_main = function(main, num_joueur) {
 //DEBUT DU JEU
 let main1 = piocher_x_lettres(6, sac)
 let main2 = piocher_x_lettres(6, sac)
-main1.push("end word")
-main2.push("end word")
+main1.push("fin du mot")
+main2.push("fin du mot")
 
 const playGame = async () => {
     let end = false;
@@ -72,8 +72,8 @@ const playGame = async () => {
                 {
                     type : 'list',
                     name : 'Jarnac',
-                    message : 'Do you want to say Jarnac ?',
-                    choices: ['Yes', 'No'],
+                    message : 'Veux-tu dire Jarnac ?',
+                    choices: ['Oui', 'Non'],
                     filter(val) {
                         return val;
                     },
@@ -85,7 +85,7 @@ const playGame = async () => {
                 return play_jarnac
             });
 
-            if (play_jarnac === 'Yes'){
+            if (play_jarnac === 'Oui'){
                 if (tour % 2 == 0) {
                     tapis = tapis2
                     main = main2
@@ -105,9 +105,9 @@ const playGame = async () => {
                 let question_lign = [
                     {
                         type : 'list',
-                        name : 'lign',
-                        message : 'On which lign do you want to make changes ?',
-                        choices: Array.from({ length: tapis.length}, (_, index) => index + 1), //les choix sont les lignes déjà existantes ou écrire une nouvelle ligne
+                        name : 'ligne',
+                        message : 'Sur quelle ligne veux-tu écrire un mot ?',
+                        choices: Array.from({ length: tapis.length + 1}, (_, index) => index + 1), //les choix sont les lignes déjà existantes ou écrire une nouvelle ligne
                         lign_choice(val) {
                             return val;
                         },
@@ -115,20 +115,20 @@ const playGame = async () => {
                 ];
 
                 let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
-                    let chosen_lign = answers["lign"]
+                    let chosen_lign = answers["ligne"]
                     return chosen_lign
                 });
 
                 main.pop()
                 main = main.concat(tapis[chosen_lign-1])
-                main.push("end word")
+                main.push("fin du mot")
                 tapis.splice(chosen_lign-1, 1)
 
                 let question_letter = [
                     {
                         type : 'list',
-                        name : 'letter',
-                        message : 'Write your word letter per letter :',
+                        name : 'lettre',
+                        message : 'Ecris ton mot lettre par lettre :',
                         choices: main, //main du joueur + lettres déjà sur la ligne
                         filter(val) {
                             return val;
@@ -140,11 +140,11 @@ const playGame = async () => {
                 let letters = []
                 while (!end_word) {
                     letters = await inquirer.prompt(question_letter).then((answers) => {
-                        if (answers["letter"] === "end word") {
+                        if (answers["lettre"] === "fin du mot") {
                             end_word = true
                         } else {
-                            letters.push(answers['letter'])
-                            let index = main.indexOf(answers['letter']);
+                            letters.push(answers['lettre'])
+                            let index = main.indexOf(answers['lettre']);
                             if (index !== -1) {
                                 main.splice(index, 1);
                             }
@@ -182,7 +182,7 @@ const playGame = async () => {
         if (tour > 1) {
             main.pop()
             main = main.concat(piocher_x_lettres(1, sac))
-            main.push("end word")
+            main.push("fin du mot")
         }
 
         console.log("--------------- TON TOUR ---------------")
@@ -192,8 +192,8 @@ const playGame = async () => {
         let question_lign = [
             {
                 type : 'list',
-                name : 'lign',
-                message : 'On which lign do you want to make changes ?',
+                name : 'ligne',
+                message : 'Sur quelle ligne veux-tu écrire un mot ?',
                 choices: Array.from({ length: tapis.length + 1 }, (_, index) => index + 1), //les choix sont les lignes déjà existantes ou écrire une nouvelle ligne
                 lign_choice(val) {
                     return val;
@@ -203,22 +203,22 @@ const playGame = async () => {
 
         // Use await to wait for player input before moving on
         let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
-            let chosen_lign = answers["lign"]
+            let chosen_lign = answers["ligne"]
             return chosen_lign
         });
 
         if (chosen_lign-1 < tapis.length) {
             main.pop()
             main = main.concat(tapis[chosen_lign-1])
-            main.push("end word")
+            main.push("fin du mot")
             tapis[chosen_lign-1] = []
         }
         
         let question_letter = [
             {
                 type : 'list',
-                name : 'letter',
-                message : 'Write your word letter per letter :',
+                name : 'lettre',
+                message : 'Ecris ton mot lettre par lettre :',
                 choices: main, //main du joueur + lettres déjà sur la ligne
                 filter(val) {
                     return val;
@@ -230,11 +230,11 @@ const playGame = async () => {
         let letters = []
         while (!end_word) {
             letters = await inquirer.prompt(question_letter).then((answers) => {
-                if (answers["letter"] === "end word") {
+                if (answers["lettre"] === "fin du mot") {
                     end_word = true
                 } else {
-                    letters.push(answers['letter'])
-                    let index = main.indexOf(answers['letter']);
+                    letters.push(answers['lettre'])
+                    let index = main.indexOf(answers['lettre']);
                     if (index !== -1) {
                         main.splice(index, 1);
                     }
