@@ -100,7 +100,7 @@ const playGame = async (main1, main2, tapis1,tapis2, mots) => {
 
         tour ++
 
-        if (tapis1.length === 8 || tapis2.length === 8) {
+        if (tapis1.length === 2 || tapis2.length === 2) {
             end = true;
             affiche_tapis(tapis1, 1);
             affiche_tapis(tapis2, 2);
@@ -136,9 +136,13 @@ fs.readFile(cheminFichier, 'utf8', (err, data) => {
     const mots = data.split(/\s+/);
     for(let i = 0; i < mots.length; i++){
         mots[i] = mots[i].toLowerCase()
-    }       
-    playGame(main1, main2, tapis1, tapis2, mots)
+    }
+    const jeu = async () => {
+    await playGame(main1, main2, tapis1, tapis2, mots)
+    affiche_fin(tapis1,tapis2)
+    }
+    jeu()
 });
 
 
-affiche_fin(tapis1,tapis2)
+
