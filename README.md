@@ -37,6 +37,8 @@ En fonction de la réponse donnée par l'utilisateur dans la zone de réponse, l
 Pour lancer le code, il faut commencer par installer node JS, ainsi que des packages grâce aux commandes suivantes  :
 - npm install random
 - npm install inquirer
+- npm install fs
 
 Le but de ce projet était d'implémenter le jeu de société Jarnac. Notre version se lance et se joue directement dans le terminal avec la commande *node main.js* si vous êtes déjà dans le dossier JS.
+!! En fonction du dossier dans lequel vous avez ouvert le programme, le chemin pour lire le fichier liste_francais.txt qui contient la liste des mots autorisés peut être faux. Si une erreur apparaît lors du lancement, modifiez le chemin ligne 129 du fichier main.js en fonction de votre répertoire.
 Pour une partie du code, nous nous sommes inspirées du code suivant : https://github.com/SBoudrias/Inquirer.js/blob/master/packages/inquirer/examples/pizza.js .
