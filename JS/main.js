@@ -99,7 +99,7 @@ const playGame = async (main1, main2, tapis1,tapis2, mots) => {
 
         tour ++
 
-        if (tapis1.length === 2 || tapis2.length === 2) {
+        if (tapis1.length === 8 || tapis2.length === 8) {
             end = true;
             affiche_tapis(tapis1, 1);
             affiche_tapis(tapis2, 2);
