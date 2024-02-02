@@ -52,7 +52,6 @@ const playGame = async (main1, main2, tapis1,tapis2, mots) => {
             }
             let letters
             tapis, main, letters = await jarnac(tapis, main, num, tour, mots)
-            //console.log(main)
 
             if (tour % 2 == 0) {
                 tapis = tapis1
@@ -117,16 +116,13 @@ let sac =  [["A", 14],["B", 4],["C", 7],["D", 5],["E", 19],["F", 2],["G", 4],["H
 let tapis1 = []
 let tapis2 = []
 
-
-
-//DEBUT DU JEU
 let main1 = piocher_x_lettres(6, sac)
 let main2 = piocher_x_lettres(6, sac)
 main1.push("fin du mot")
 main2.push("fin du mot")
 
-
-const cheminFichier = './JS/liste_francais.txt';
+//DEBUT DU JEU
+const cheminFichier = './liste_francais.txt';
 fs.readFile(cheminFichier, 'utf8', (err, data) => {
     if (err) {
         console.error('Erreur de lecture du fichier:', err);
@@ -138,8 +134,8 @@ fs.readFile(cheminFichier, 'utf8', (err, data) => {
         mots[i] = mots[i].toLowerCase()
     }
     const jeu = async () => {
-    await playGame(main1, main2, tapis1, tapis2, mots)
-    affiche_fin(tapis1,tapis2)
+        await playGame(main1, main2, tapis1, tapis2, mots)
+        affiche_fin(tapis1,tapis2)
     }
     jeu()
 });

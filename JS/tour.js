@@ -19,7 +19,6 @@ export const jouer_tour = async (tapis, main, num, mots) => {
         },
     ];
 
-    // Use await to wait for player input before moving on
     let chosen_lign = await inquirer.prompt(question_lign).then((answers) => {
         let chosen_lign = answers["ligne"]
         return chosen_lign
@@ -45,7 +44,7 @@ export const jouer_tour = async (tapis, main, num, mots) => {
                 type : 'list',
                 name : 'lettre',
                 message : 'Ecris ton mot lettre par lettre :',
-                choices: main, //main du joueur + lettres déjà sur la ligne
+                choices: main,
                 filter(val) {
                     return val;
                 },

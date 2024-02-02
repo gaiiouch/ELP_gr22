@@ -64,7 +64,7 @@ export const jarnac = async (tapis, main, num, tour, mots) => {
                     type : 'list',
                     name : 'lettre',
                     message : 'Ecris ton mot lettre par lettre :',
-                    choices: main, //main du joueur + lettres déjà sur la ligne
+                    choices: main,
                     filter(val) {
                         return val;
                     },
