@@ -12,9 +12,12 @@ const piocher_x_lettres = function(x, sac) {
     let i = 0
     let new_lettres = []
     while (i < x) {
-        let number = random.int(0,25)
+        let number = random.int(0,sac.length-1)
         let lettre = sac[number][0]
         sac[number][1] = (sac[number][1])-1
+        if (sac[number][1] === 0){
+            sac.splice(number,1)
+        }
         new_lettres.push(lettre)
         i = i + 1
     }
