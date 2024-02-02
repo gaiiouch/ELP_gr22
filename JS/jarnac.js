@@ -48,7 +48,6 @@ export const jarnac = async (tapis, main, num, tour, mots) => {
             let chosen_lign = answers["ligne"]
             return chosen_lign
         });
-
         main.pop()
         main = main.concat(tapis[chosen_lign-1])
         main.push("fin du mot")

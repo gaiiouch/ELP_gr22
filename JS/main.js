@@ -52,7 +52,7 @@ const playGame = async (main1, main2, tapis1,tapis2, mots) => {
             }
             let letters
             tapis, main, letters = await jarnac(tapis, main, num, tour, mots)
-            console.log(main)
+            //console.log(main)
 
             if (tour % 2 == 0) {
                 tapis = tapis1
@@ -126,7 +126,7 @@ main1.push("fin du mot")
 main2.push("fin du mot")
 
 
-const cheminFichier = './liste_francais.txt';
+const cheminFichier = './JS/liste_francais.txt';
 fs.readFile(cheminFichier, 'utf8', (err, data) => {
     if (err) {
         console.error('Erreur de lecture du fichier:', err);

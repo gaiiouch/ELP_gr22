@@ -26,6 +26,7 @@ export const jouer_tour = async (tapis, main, num, mots) => {
     });
 
     if (chosen_lign-1 < tapis.length) {
+        console.log("tour.js l29" + main)
         main.pop()
         main = main.concat(tapis[chosen_lign-1])
         main.push("fin du mot")
