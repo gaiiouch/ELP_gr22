@@ -5,7 +5,7 @@ Membres du groupe : Anne-Gaëlle Mauger 3TC2, Louise Marc 3TC2, Ilhême Maliki 3
 
 ## Projet GO
 
-Nous avons choisi de traiter le problème du produit de deux matrices carrées. 
+Nous avons choisi de traiter le problème du produit de deux matrices carrées.
 
 Nous avons commencé par écrire un code qui calculait le produit des matrices données en paramètre de façon séquentielle. 
 Pour accélérer le processus de calcul, nous avons ajouté les go routines de façon à ce que chaque go routine calcule une ligne de la matrice résultat. 
@@ -16,8 +16,15 @@ Au final, il y a deux versions du code, les légères différences n'influant pa
 - Dans la première version, il faut changer la valeur de la constante "taille" des matrices voulues à la main dans les fichiers tcpclient.go et tcpserver.go.
 - Dans la deuxième version, l'utilisateur peut décider de la taille des matrices lors de l'exécution de tcpclient.go grâce à un système de slices.
 
-Pour lancer les fichiers, les commandes à écrire dans les terminaux sont notées en commentaire en haut des fichiers tcpclient.go et tcpserver.go. 
-Il faut lancer le serveur avant le client.
+Pour exécuter les codes, il faut entrer la commande suivante pour le serveur TCP :
+```bash
+go run tcpserver.go main.go prodMat.go
+```
+et pour le client TCP :
+```bash
+go run tcpclient.go ecriture.go
+```
+Il faut lancer le serveur avant le client. Les commandes à écrire dans les terminaux sont également notées en commentaire en haut des fichiers tcpclient.go et tcpserver.go si nécessaire.
 
 ## Projet ELM
 
