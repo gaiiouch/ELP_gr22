@@ -23,11 +23,14 @@ Il faut lancer le serveur avant le client.
 
 Pour télécharger ELM en fonction de son OS : https://guide.elm-lang.org/install/elm.html
 
-Packages à télécharger pour le bon fonctionnement du code avec elm install :
-- elm/http
-- elm/json
-- elm/random
-- elm-community/list-extra
+Commandes à entrer dans un terminal pour le bon fonctionnement du code :
+```bash
+elm init
+elm install elm/http
+elm install elm/json
+elm install elm/random
+elm install elm-community/list-extra
+```
 
 Le but de ce projet était de créer une page web qui affiche une définition d'un mot choisi aléatoirement dans une liste. L'utilisateur doit deviner ce mot grâce à la définition.
 En fonction de la réponse donnée par l'utilisateur dans la zone de réponse, la page affiche si le mot est correct ou non. En cas d'échec, l'utilisateur peut choisir d'afficher la réponse ou de changer la définition pour jouer avec un autre mot.
@@ -35,12 +38,18 @@ En fonction de la réponse donnée par l'utilisateur dans la zone de réponse, l
 ## Projet JavaScript
 
 Pour lancer le code, il faut commencer par installer node JS, ainsi que des packages grâce aux commandes suivantes  :
-- npm install random
-- npm install inquirer
-- npm install fs
+```bash
+npm install random
+npm install inquirer
+npm install fs
+```
+ou plus simplement avec l'unique commande :
+```bash
+npm install 
+```
 
 Le but de ce projet était d'implémenter le jeu de société Jarnac. Notre version se lance et se joue directement dans le terminal avec la commande *node main.js* si vous êtes déjà dans le dossier JS.
 
-Remarque : en fonction du dossier dans lequel vous avez ouvert le programme, le chemin pour lire le fichier liste_francais.txt qui contient la liste des mots autorisés peut être faux. Si une erreur apparaît lors du lancement, modifiez le chemin ligne 129 du fichier main.js en fonction de votre répertoire.
+**Remarque** : en fonction du dossier dans lequel vous avez ouvert le programme, le chemin pour lire le fichier liste_francais.txt qui contient la liste des mots autorisés peut être faux. Si une erreur apparaît lors du lancement, modifiez le chemin ligne 129 du fichier main.js en fonction de votre répertoire.
 
 Pour une partie du code, nous nous sommes inspirées du code suivant : https://github.com/SBoudrias/Inquirer.js/blob/master/packages/inquirer/examples/pizza.js .
